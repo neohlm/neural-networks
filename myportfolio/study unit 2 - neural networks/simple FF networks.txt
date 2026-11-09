@@ -1,0 +1,7 @@
+SISO: https://colab.research.google.com/drive/1O3MrAy5kb8KjMYf82ATaYD2V43LCwVIQ?usp=sharing
+
+MISO: https://colab.research.google.com/drive/16SQuyfxPcXofLUkFmaJyGjBm36REYLwy?usp=sharing
+
+SIMO:  https://colab.research.google.com/drive/1rgVMdWO1cBkqwgde_btr4JyheY8KrUiC?usp=sharing
+
+MIMO: https://colab.research.google.com/drive/1v7BtRXeCzqJsMGpPSpWzHqjV1Z7F0gYP?usp=sharing
