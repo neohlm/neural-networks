@@ -1,0 +1,1 @@
+Chapter 11 uses reviews.txt and labels.txt, read by relative path from the notebook folder. These companion files are from Andrew Trask?s official Grokking Deep Learning repository: https://github.com/iamtrask/Grokking-Deep-Learning. Keep them in this folder when running the notebook.
