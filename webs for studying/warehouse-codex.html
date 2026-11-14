@@ -1295,15 +1295,15 @@ HUD.side=function(t,dt,b){
   bx.strokeStyle='rgba(98,240,255,.18)';bx.beginPath();bx.moveTo(x0,yL);bx.lineTo(x0,sTop-6*DPR);bx.moveTo(x0+tw,yL);bx.lineTo(x0+tw,sTop-6*DPR);bx.stroke();
   const station=(y,label,col)=>{const ex=14*DPR;bx.strokeStyle=col;bx.lineWidth=1.2*DPR;bx.beginPath();bx.moveTo(x0-ex,y);bx.lineTo(x0+tw+ex,y);
     bx.moveTo(x0-ex,y-5*DPR);bx.lineTo(x0-ex,y+5*DPR);bx.moveTo(x0+tw+ex,y-5*DPR);bx.lineTo(x0+tw+ex,y+5*DPR);bx.stroke();bx.fillStyle=col;bx.fillText(label,cx,y-11*DPR)};
-  station(yE,'EXTRACT','rgba(169,139,255,.85)');
-  station(yL,'LOAD','rgba(98,240,255,.85)');
+  station(yE,'PROMPT','rgba(169,139,255,.85)');
+  station(yL,'RESPOND','rgba(98,240,255,.85)');
   const sc=.6+.4*Math.sin(t*.006);
   const sg=bx.createLinearGradient(0,yT-14*DPR,0,yT+14*DPR);sg.addColorStop(0,'rgba(255,203,116,0)');sg.addColorStop(.5,`rgba(255,203,116,${.28*sc})`);sg.addColorStop(1,'rgba(255,203,116,0)');
   bx.fillStyle=sg;bx.fillRect(x0-18*DPR,yT-14*DPR,tw+36*DPR,28*DPR);
   bx.strokeStyle=`rgba(255,220,160,${.55+.4*sc})`;bx.lineWidth=1.4*DPR;bx.beginPath();bx.moveTo(x0-18*DPR,yT);bx.lineTo(x0+tw+18*DPR,yT);bx.stroke();
-  bx.fillStyle='rgba(255,203,116,.9)';bx.fillText('TRANSFORM',cx,yT-18*DPR);
+  bx.fillStyle='rgba(255,203,116,.9)';bx.fillText('REASON',cx,yT-18*DPR);
   bx.font=`500 ${Math.round(9*DPR)}px "Chakra Petch",sans-serif`;track(bx,1.6*DPR);
-  bx.fillStyle='rgba(146,157,196,.6)';bx.fillText('clean · conform · key',cx,yT+26*DPR);
+  bx.fillStyle='rgba(146,157,196,.6)';bx.fillText('retrieve · ground · answer',cx,yT+26*DPR);
   if(!S.reduce&&t>ss.next){ss.pk.push({x:x0+cw/2+rnd()*(tw-cw),y:yE+4*DPR,v:(1+rnd()*1.1)*DPR,clean:false,s:(3+rnd()*5)*DPR,r:rnd()*TAU,lane:0,fl:0});ss.next=t+120+rnd()*170}
   bx.globalCompositeOperation='lighter';
   for(let i=ss.pk.length-1;i>=0;i--){const p=ss.pk[i];
@@ -1325,8 +1325,8 @@ HUD.side=function(t,dt,b){
   if(ss.flash>0){bx.fillStyle=`rgba(109,255,179,${.35*ss.flash})`;bx.fillRect(x0,sTop,tw,sBot-sTop);if(!S.reduce)ss.flash-=.015*k}
   bx.font=`600 ${Math.round(10*DPR)}px "Chakra Petch",sans-serif`;track(bx,2*DPR);
   bx.fillStyle=ss.flash>0?'rgba(109,255,179,.95)':'rgba(146,157,196,.85)';
-  bx.fillText(ss.flash>0?'COMMIT ✓':'FACT_SALES',cx,sTop-12*DPR);
-  bx.fillStyle='rgba(93,104,148,.9)';bx.font=`500 ${Math.round(9*DPR)}px "Chakra Petch",sans-serif`;bx.fillText('ROWS LOADED',cx,sBot+22*DPR);
+  bx.fillText(ss.flash>0?'ANSWER ✓':'CONTEXT_STATE',cx,sTop-12*DPR);
+  bx.fillStyle='rgba(93,104,148,.9)';bx.font=`500 ${Math.round(9*DPR)}px "Chakra Petch",sans-serif`;bx.fillText('TOKENS GENERATED',cx,sBot+22*DPR);
   bx.fillStyle='rgba(232,237,255,.95)';bx.font=`400 ${Math.round(15*DPR)}px "Michroma",sans-serif`;track(bx,.5*DPR);
   bx.fillText(ss.loaded.toLocaleString('en-ZA'),cx,sBot+44*DPR);
   bx.restore();
