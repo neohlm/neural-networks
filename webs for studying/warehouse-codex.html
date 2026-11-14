@@ -1,0 +1,1508 @@
+<title>Local AI Field Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Chakra+Petch:wght@400;500;600;700&family=Sora:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Mono:wght@400;500;600&family=Unbounded:wght@300;400;500&family=Azeret+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky command bar with theme + mode switchers, hero with a live skin-specific visual, sector selector, then study modules or a flip-card deck.
+   Three committed dark worlds, switched by data-skin on <html>: HUD (default), Nebula Observatory, Abyssal Station. */
+:root{
+  /* HUD — holographic command deck */
+  --void:#04050c;
+  --glass:rgba(14,20,46,.66);
+  --glass2:rgba(20,28,62,.82);
+  --line:rgba(130,160,255,.17);
+  --line2:rgba(98,240,255,.38);
+  --ink:#e8edff;
+  --dim:#929dc4;
+  --faint:#5d6894;
+  --acc:#62f0ff;   --acc-rgb:98,240,255;
+  --acc2:#a98bff;  --acc2-rgb:169,139,255;
+  --mark:#ffcb74;  --mark-rgb:255,203,116;
+  --ok:#6dffb3;    --ok-rgb:109,255,179;
+  --on-acc:#04050c;
+  --bar-bg:rgba(6,9,22,.8);
+  --body-bg:
+    radial-gradient(ellipse 70% 50% at 85% -5%, rgba(169,139,255,.17), transparent 60%),
+    radial-gradient(ellipse 55% 45% at -5% 35%, rgba(98,240,255,.09), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(255,203,116,.06), transparent 60%);
+  --vignette:none;
+  --h1-grad:linear-gradient(100deg,#ffffff 0%,#cfe9ff 40%,#62f0ff 70%,#a98bff 100%);
+  --f-disp:'Michroma','Eurostile','Segoe UI',sans-serif;
+  --f-ui:'Chakra Petch','Segoe UI',system-ui,sans-serif;
+  --f-body:'Sora','Segoe UI',system-ui,sans-serif;
+  --f-q:var(--f-body);
+  --h1-size:clamp(2.1rem,6vw,4.1rem); --h1-weight:400; --h1-track:.02em; --h1-style:normal;
+  --h2-size:1.05rem; --h2-track:.14em; --h2-case:uppercase;
+  --brand-size:.72rem;
+  --fq-size:clamp(1.25rem,3.2vw,1.8rem); --fq-weight:500;
+  --r-panel:0px; --r-ctl:0px; --r-small:0px;
+  --panel-shadow:none; --blur:6px;
+  --scan:"SCAN";
+  --cyan:var(--acc); --violet:var(--acc2); --amber:var(--mark);
+  color-scheme:dark;
+}
+:root[data-skin="nebula"]{
+  /* Nebula Observatory — star-atlas plates over a living nebula */
+  --void:#05030c;
+  --glass:rgba(12,8,26,.7);
+  --glass2:rgba(15,10,32,.88);
+  --line:rgba(244,201,122,.16);
+  --line2:rgba(244,201,122,.44);
+  --ink:#f6efe2;
+  --dim:#b9adc9;
+  --faint:#7d7092;
+  --acc:#f4c97a;   --acc-rgb:244,201,122;
+  --acc2:#ea94c2;  --acc2-rgb:234,148,194;
+  --mark:#9fd8ff;  --mark-rgb:159,216,255;
+  --ok:#9ef0c6;    --ok-rgb:158,240,198;
+  --on-acc:#1a1006;
+  --bar-bg:rgba(8,5,18,.78);
+  --body-bg:
+    radial-gradient(ellipse 60% 50% at 75% 15%, rgba(234,148,194,.22), transparent 60%),
+    radial-gradient(ellipse 50% 45% at 15% 60%, rgba(70,40,140,.35), transparent 65%),
+    radial-gradient(ellipse 40% 30% at 70% 30%, rgba(244,201,122,.12), transparent 60%);
+  --vignette:radial-gradient(ellipse 120% 90% at 50% 40%, transparent 55%, rgba(3,2,8,.75) 100%);
+  --h1-grad:linear-gradient(100deg,#fff6e3 0%,#f4c97a 42%,#ea94c2 78%,#b79bff 100%);
+  --f-disp:'Cormorant Garamond','Garamond',Georgia,serif;
+  --f-ui:'IBM Plex Mono',ui-monospace,'SFMono-Regular',monospace;
+  --f-q:var(--f-disp);
+  --h1-size:clamp(2.9rem,8.4vw,5.8rem); --h1-weight:500; --h1-track:-.01em; --h1-style:normal;
+  --h2-size:1.65rem; --h2-track:.01em; --h2-case:none;
+  --brand-size:1rem;
+  --fq-size:clamp(1.65rem,4.2vw,2.5rem); --fq-weight:500;
+  --r-panel:3px; --r-ctl:2px; --r-small:2px;
+  --panel-shadow:0 30px 70px -40px rgba(0,0,0,.9);
+  --blur:10px;
+  --scan:"SEEK";
+}
+:root[data-skin="abyss"]{
+  /* Abyssal Station — wet glass portholes in the deep */
+  --void:#010609;
+  --glass:rgba(4,28,36,.5);
+  --glass2:rgba(4,30,40,.82);
+  --line:rgba(79,240,216,.16);
+  --line2:rgba(79,240,216,.42);
+  --ink:#e2fbf6;
+  --dim:#92bdbb;
+  --faint:#527f82;
+  --acc:#4ff0d8;   --acc-rgb:79,240,216;
+  --acc2:#ff6fd0;  --acc2-rgb:255,111,208;
+  --mark:#ffe27a;  --mark-rgb:255,226,122;
+  --ok:#a6ff8f;    --ok-rgb:166,255,143;
+  --on-acc:#012a26;
+  --bar-bg:rgba(1,14,18,.72);
+  --body-bg:linear-gradient(180deg,#05303a 0%,#03161d 40%,#010609 100%);
+  --vignette:radial-gradient(ellipse 110% 85% at 50% 30%, transparent 50%, rgba(0,3,5,.8) 100%);
+  --h1-grad:linear-gradient(100deg,#effffc 0%,#8af7e6 40%,#45b9ff 72%,#ff7ad6 100%);
+  --f-disp:'Unbounded','Sora',system-ui,sans-serif;
+  --f-ui:'Azeret Mono',ui-monospace,'SFMono-Regular',monospace;
+  --f-q:var(--f-body);
+  --h1-size:clamp(2.05rem,5.8vw,3.9rem); --h1-weight:300; --h1-track:-.02em; --h1-style:normal;
+  --h2-size:1.1rem; --h2-track:.02em; --h2-case:none;
+  --brand-size:.74rem;
+  --fq-size:clamp(1.25rem,3.2vw,1.8rem); --fq-weight:400;
+  --r-panel:20px; --r-ctl:999px; --r-small:10px;
+  --panel-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 24px 60px -30px rgba(79,240,216,.35);
+  --blur:12px;
+  --scan:"PING";
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+::selection{background:rgba(var(--acc-rgb),.35);color:var(--ink)}
+body{
+  background-color:var(--void);
+  background-image:var(--body-bg);
+  background-attachment:fixed;
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
+  scrollbar-color:var(--line2) transparent;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bar-bg)}
+.layer{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#bggl{opacity:0;transition:opacity 1.2s}
+:root[data-skin="nebula"] #bggl.ready{opacity:1}
+.vignette{background:var(--vignette)}
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+
+/* View-transition circular reveal on theme switch */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}
+::view-transition-new(root){z-index:2}
+
+/* Command bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bar-bg);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-disp);font-size:var(--brand-size);letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;min-width:0}
+.brand i{width:18px;height:18px;flex:none;border:1.5px solid var(--acc);transform:rotate(45deg);box-shadow:0 0 12px rgba(var(--acc-rgb),.6),inset 0 0 6px rgba(var(--acc-rgb),.5);transition:.5s}
+:root[data-skin="nebula"] .brand{letter-spacing:.18em;font-weight:600}
+:root[data-skin="nebula"] .brand i{border-radius:50%;transform:none;border-width:1px;background:radial-gradient(circle at 35% 35%,#fff6e0,var(--acc) 38%,transparent 72%);box-shadow:0 0 16px rgba(var(--acc-rgb),.75)}
+:root[data-skin="abyss"] .brand{letter-spacing:.16em;font-weight:400}
+:root[data-skin="abyss"] .brand i{border-radius:50%;transform:none;border-width:2px;box-shadow:0 0 0 4px rgba(var(--acc-rgb),.14),0 0 16px rgba(var(--acc-rgb),.6),inset 0 0 8px rgba(var(--acc-rgb),.6)}
+.cluster{display:flex;align-items:center;gap:12px}
+.skins{display:flex;gap:4px;align-items:center}
+.skins button{display:flex;align-items:center;gap:8px;background:none;border:1px solid transparent;padding:3px 10px 3px 3px;border-radius:999px;color:var(--faint);font-family:var(--f-ui);font-size:.68rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;transition:.25s}
+.skins button:hover{color:var(--ink)}
+.skins button[aria-pressed="true"]{border-color:var(--line2);color:var(--ink);background:rgba(var(--acc-rgb),.06)}
+.skins em{font-style:normal}
+.sw{width:22px;height:22px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28),0 0 10px rgba(0,0,0,.4)}
+.sw-hud{background:radial-gradient(circle at 30% 30%,#9ff7ff,#62f0ff 18%,#2b3a8a 55%,#04050c 90%)}
+.sw-nebula{background:radial-gradient(circle at 35% 30%,#fff1cc,#f4c97a 16%,#ea94c2 38%,#3a1458 68%,#05030c 95%)}
+.sw-abyss{background:radial-gradient(circle at 50% 18%,#b9fff4,#4ff0d8 14%,#0b5560 46%,#010609 85%)}
+.modes{display:flex;border:1px solid var(--line);padding:3px;gap:3px;background:rgba(0,0,0,.25);border-radius:var(--r-ctl)}
+.modes button{background:none;border:0;font-family:var(--f-ui);font-weight:600;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;padding:7px 14px;color:var(--dim);transition:.25s;border-radius:var(--r-ctl)}
+.modes button[aria-pressed="true"]{color:var(--on-acc);background:var(--acc);box-shadow:0 0 18px rgba(var(--acc-rgb),.45)}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center;padding-block:56px 30px}
+.eyebrow{font-family:var(--f-ui);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--acc);box-shadow:0 0 8px var(--acc)}
+h1{font-family:var(--f-disp);font-weight:var(--h1-weight);font-style:var(--h1-style);font-size:var(--h1-size);line-height:1.02;letter-spacing:var(--h1-track);margin:18px 0 18px;text-wrap:balance;
+  background:var(--h1-grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 24px rgba(var(--acc-rgb),.22))}
+h1 span{display:block;font-family:var(--f-ui);font-style:normal;font-weight:500;font-size:clamp(.66rem,1.4vw,.8rem);letter-spacing:.42em;text-transform:uppercase;margin-top:1.4em;color:var(--dim);-webkit-text-fill-color:var(--dim);filter:none}
+:root[data-skin="nebula"] h1 em{font-style:italic;font-weight:500}
+.lede{color:var(--dim);max-width:52ch;font-weight:300;font-size:1.02rem;margin:0}
+.stats{display:flex;flex-wrap:wrap;gap:26px;margin-top:28px}
+.stat b{display:block;font-family:var(--f-disp);font-size:1.6rem;font-weight:var(--h1-weight);font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.3}
+:root[data-skin="nebula"] .stat b{font-size:2.2rem;line-height:1.1}
+.stat small{font-family:var(--f-ui);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+.stat.ok b{color:var(--ok);text-shadow:0 0 16px rgba(var(--ok-rgb),.4)}
+.herofig{position:relative;margin:0;aspect-ratio:1/1;max-width:100%;width:100%;max-height:430px;justify-self:center}
+#hero{width:100%;height:100%;display:block}
+.herofig figcaption{position:absolute;left:0;right:0;bottom:2px;text-align:center;font-family:var(--f-ui);font-size:.64rem;letter-spacing:.24em;text-transform:uppercase;color:var(--faint)}
+
+/* Panels */
+.hud{position:relative;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border-radius:var(--r-panel);box-shadow:var(--panel-shadow)}
+.hud::before,.hud::after{content:"";position:absolute;width:14px;height:14px;pointer-events:none;transition:border-color .3s,color .3s}
+.hud::before{top:-1px;left:-1px;border-top:2px solid var(--acc);border-left:2px solid var(--acc)}
+.hud::after{bottom:-1px;right:-1px;border-bottom:2px solid var(--acc);border-right:2px solid var(--acc)}
+/* Nebula: star-atlas plate with inner hairline and star ornaments */
+:root[data-skin="nebula"] .hud{outline:1px solid rgba(var(--acc-rgb),.1);outline-offset:-7px}
+:root[data-skin="nebula"] .hud::before,:root[data-skin="nebula"] .hud::after{content:"✦";border:0;width:auto;height:auto;font-size:10px;line-height:1;color:var(--acc);text-shadow:0 0 8px rgba(var(--acc-rgb),.9)}
+:root[data-skin="nebula"] .hud::before{top:3px;left:3px}
+:root[data-skin="nebula"] .hud::after{bottom:3px;right:3px;top:auto;left:auto}
+/* Abyss: wet glass with a caustic highlight along the top */
+:root[data-skin="abyss"] .hud::before{border:0;top:0;left:22px;right:22px;width:auto;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--acc-rgb),.7),transparent)}
+:root[data-skin="abyss"] .hud::after{display:none}
+
+/* Sectors */
+.sectors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px;scroll-margin-top:80px}
+.sector{text-align:left;padding:14px 16px 16px;background:var(--glass);border:1px solid var(--line);border-radius:var(--r-small);transition:border-color .25s,background .25s,transform .25s;display:flex;flex-direction:column;gap:6px;min-width:0;backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur))}
+.sector:hover{border-color:var(--line2);transform:translateY(-2px)}
+.sector[aria-pressed="true"]{border-color:var(--acc);background:rgba(var(--acc-rgb),.08);box-shadow:0 0 0 1px rgba(var(--acc-rgb),.25),0 10px 40px -18px rgba(var(--acc-rgb),.6)}
+.sector .code{font-family:var(--f-ui);font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+.sector .name{font-family:var(--f-disp);font-size:.84rem;letter-spacing:.06em;line-height:1.3}
+:root[data-skin="nebula"] .sector .name{font-size:1.3rem;letter-spacing:0;font-weight:600}
+:root[data-skin="abyss"] .sector .name{font-size:.9rem;letter-spacing:0;font-weight:400}
+.sector .meta{font-family:var(--f-ui);font-size:.74rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.meter{height:3px;background:rgba(var(--acc-rgb),.12);overflow:hidden;margin-top:4px;border-radius:var(--r-ctl)}
+.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--ok));box-shadow:0 0 10px var(--acc);transition:width .6s cubic-bezier(.2,.8,.2,1);border-radius:var(--r-ctl)}
+
+/* Toolbar */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px}
+.search{flex:1 1 240px;min-width:0;display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:rgba(0,0,0,.3);padding:0 14px;border-radius:var(--r-ctl);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur))}
+.search span{font-family:var(--f-ui);font-size:.68rem;letter-spacing:.2em;color:var(--acc)}
+.search span::before{content:var(--scan)}
+.search input{flex:1;min-width:0;background:none;border:0;color:var(--ink);font:400 .95rem var(--f-body);padding:11px 0;outline:none}
+.search input::placeholder{color:var(--faint)}
+.search:focus-within{border-color:var(--acc)}
+.btn{font-family:var(--f-ui);font-weight:600;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line2);background:rgba(var(--acc-rgb),.05);color:var(--acc);padding:10px 15px;transition:.2s;white-space:nowrap;border-radius:var(--r-ctl)}
+.btn:hover{background:rgba(var(--acc-rgb),.14);box-shadow:0 0 16px -4px rgba(var(--acc-rgb),.6)}
+.btn[aria-pressed="true"]{background:var(--acc);color:var(--on-acc)}
+.btn.ghost{border-color:var(--line);color:var(--dim);background:none}
+.btn.ghost:hover{color:var(--ink);border-color:var(--line2)}
+.btn.ghost[aria-pressed="true"]{background:var(--acc);color:var(--on-acc);border-color:var(--acc)}
+.btn.good{border-color:rgba(var(--ok-rgb),.45);color:var(--ok);background:rgba(var(--ok-rgb),.05)}
+.btn.good[aria-pressed="true"]{background:var(--ok);color:var(--on-acc);box-shadow:0 0 16px -2px rgba(var(--ok-rgb),.6)}
+.btn.warn{border-color:rgba(var(--mark-rgb),.45);color:var(--mark);background:rgba(var(--mark-rgb),.05)}
+
+/* Section headers */
+.group-h{display:flex;align-items:baseline;gap:14px;margin:34px 0 14px;flex-wrap:wrap}
+.group-h h2{font-family:var(--f-disp);font-weight:var(--h1-weight);font-size:var(--h2-size);letter-spacing:var(--h2-track);text-transform:var(--h2-case);margin:0}
+.group-h span{font-family:var(--f-ui);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.group-h::after{content:"";flex:1 1 60px;height:1px;background:linear-gradient(90deg,var(--line2),transparent)}
+
+/* Question modules */
+.list{display:flex;flex-direction:column;gap:14px}
+.q{padding:22px 24px;transition:border-color .3s}
+.q.is-learned{border-color:rgba(var(--ok-rgb),.34)}
+.q.is-learned::before,.q.is-learned::after{border-color:var(--ok);color:var(--ok)}
+:root[data-skin="abyss"] .q.is-learned::before{background:linear-gradient(90deg,transparent,rgba(var(--ok-rgb),.75),transparent)}
+.qhead{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:10px}
+.qtag{font-family:var(--f-ui);font-weight:600;font-size:.74rem;letter-spacing:.16em;color:var(--acc)}
+:root:not([data-skin]) .qtag,:root[data-skin="hud"] .qtag{font-family:var(--f-disp);font-weight:400;font-size:.76rem;letter-spacing:.12em}
+.chip{font-family:var(--f-ui);font-size:.66rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--line);color:var(--dim);font-variant-numeric:tabular-nums;border-radius:var(--r-ctl)}
+.chip.marks{color:var(--mark);border-color:rgba(var(--mark-rgb),.4);background:rgba(var(--mark-rgb),.06)}
+.chip.learned{color:var(--ok);border-color:rgba(var(--ok-rgb),.4)}
+.qtitle{font-family:var(--f-body);font-weight:600;font-size:1.13rem;line-height:1.45;margin:0;text-wrap:balance;max-width:70ch}
+:root[data-skin="nebula"] .qtitle{font-family:var(--f-disp);font-size:1.6rem;font-weight:600;line-height:1.2}
+:root[data-skin="abyss"] .qtitle{font-weight:500}
+.af{font-style:italic;font-weight:300;color:var(--dim);font-size:.9rem;margin:6px 0 0;max-width:70ch}
+.sub{font-family:var(--f-ui);font-size:.82rem;color:var(--acc2);margin:8px 0 0;letter-spacing:.02em}
+.qactions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.ans{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.2,.8,.2,1)}
+.ans>div{overflow:hidden;min-width:0}
+.q.open .ans{grid-template-rows:1fr}
+.ansin{margin-top:16px;padding-top:16px;border-top:1px dashed var(--line2)}
+
+/* Answer content */
+.answer{font-size:.95rem;color:var(--ink);opacity:.92;max-width:78ch}
+.answer p{margin:0 0 10px}
+.answer h4{font-family:var(--f-ui);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);margin:16px 0 8px;font-weight:600}
+.answer h4:first-child{margin-top:0}
+.pts{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:8px}
+.pts li{position:relative;padding-left:22px}
+.pts li::before{content:"";position:absolute;left:3px;top:.62em;width:7px;height:7px;transform:rotate(45deg);border:1.5px solid var(--acc);box-shadow:0 0 6px rgba(var(--acc-rgb),.6)}
+:root[data-skin="nebula"] ul.pts li::before{content:"✦";border:0;box-shadow:none;transform:none;width:auto;height:auto;top:.2em;left:1px;font-size:.78rem;line-height:1;color:var(--acc);text-shadow:0 0 8px rgba(var(--acc-rgb),.8)}
+:root[data-skin="abyss"] ul.pts li::before{border-radius:50%;transform:none;width:8px;height:8px;top:.55em;background:rgba(var(--acc-rgb),.25);box-shadow:0 0 10px rgba(var(--acc-rgb),.8)}
+.pts b,.terms dt{color:var(--ink);font-weight:600}
+ol.pts{counter-reset:s}
+ol.pts li{counter-increment:s;padding-left:30px}
+ol.pts li::before{content:counter(s);transform:none;border:0;box-shadow:none;width:auto;height:auto;top:.05em;left:0;font-family:var(--f-disp);font-size:.8rem;color:var(--acc)}
+:root[data-skin="nebula"] ol.pts li::before{font-size:1.15rem;top:-.15em;font-weight:600}
+.mk{display:inline-block;margin-left:8px;font-family:var(--f-ui);font-size:.68rem;font-weight:700;color:var(--mark);border:1px solid rgba(var(--mark-rgb),.4);padding:0 6px;line-height:1.5;vertical-align:1px;font-variant-numeric:tabular-nums;border-radius:var(--r-ctl)}
+.terms{margin:0;display:grid;gap:12px}
+.term{padding:10px 14px;border-left:1px solid var(--line2);background:rgba(var(--acc-rgb),.035);border-radius:0 var(--r-small) var(--r-small) 0}
+.term dt{font-family:var(--f-ui);font-size:.95rem;letter-spacing:.02em}
+:root[data-skin="nebula"] .term dt{font-family:var(--f-disp);font-size:1.25rem;letter-spacing:0}
+.term dd{margin:4px 0 0}
+.note{padding:10px 14px;border:1px solid rgba(var(--acc2-rgb),.3);background:rgba(var(--acc2-rgb),.07);font-size:.9rem;border-radius:var(--r-small)}
+.note b{color:var(--acc2);font-family:var(--f-ui);letter-spacing:.12em;text-transform:uppercase;font-size:.7rem;margin-right:8px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+.split>div{padding:12px 14px;border:1px solid var(--line);min-width:0;border-radius:var(--r-small)}
+.split h5{margin:0 0 6px;font-family:var(--f-disp);font-weight:var(--h1-weight);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2)}
+:root[data-skin="nebula"] .split h5{font-size:1.3rem;letter-spacing:0;text-transform:none}
+.tablebox{overflow-x:auto;margin-bottom:10px;border:1px solid var(--line);border-radius:var(--r-small)}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:.9rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-ui);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:600;background:rgba(var(--acc-rgb),.06)}
+td:first-child{color:var(--dim);font-family:var(--f-ui);font-size:.82rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.diagram{overflow-x:auto;margin:6px 0 14px;border:1px solid var(--line);background:rgba(0,0,0,.35);padding:8px;border-radius:var(--r-small)}
+.diagram svg{display:block;width:100%;min-width:560px;height:auto}
+.sv-box{fill:var(--glass2);stroke:var(--acc);stroke-width:1.2}
+.sv-box.alt{stroke:var(--acc2)}
+.sv-t{fill:var(--ink);font-family:var(--f-ui);font-size:13px;font-weight:600}
+.sv-s{fill:var(--dim);font-family:var(--f-ui);font-size:11.5px}
+.sv-k{fill:var(--mark);font-family:var(--f-ui);font-size:10.5px;letter-spacing:.14em}
+.sv-c{fill:var(--acc2);font-family:var(--f-ui);font-size:11.5px;letter-spacing:.1em}
+.sv-line{stroke:var(--acc);stroke-width:1.6;fill:none}
+.sv-line.back{stroke:var(--acc2);stroke-dasharray:5 5}
+.sv-line.grad{stroke:var(--mark)}
+.sv-head{fill:var(--acc)}
+.sv-head.back{fill:var(--acc2)}
+.sv-head.grad{fill:var(--mark)}
+.flow{stroke-dasharray:6 6;animation:flow 1.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-24}}
+
+.empty{padding:40px 20px;text-align:center;color:var(--dim);font-family:var(--f-ui);letter-spacing:.06em}
+
+/* Flashcards */
+.deck{max-width:860px;margin:0 auto}
+.deckbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.counter{font-family:var(--f-disp);font-size:.9rem;letter-spacing:.12em;font-variant-numeric:tabular-nums}
+:root[data-skin="nebula"] .counter{font-size:1.5rem;letter-spacing:.02em}
+.counter small{color:var(--faint);font-size:.75em}
+.trail{height:2px;background:rgba(var(--acc-rgb),.12);margin-bottom:18px;border-radius:2px}
+.trail i{display:block;height:100%;background:var(--acc);box-shadow:0 0 10px var(--acc);transition:width .4s;border-radius:2px}
+.stage{perspective:1600px}
+.card{position:relative;height:clamp(440px,64vh,640px);transform-style:preserve-3d;transition:transform .75s cubic-bezier(.3,.9,.25,1);cursor:pointer;border-radius:var(--r-panel)}
+.card.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;padding:28px 30px;background:var(--glass2);overflow:hidden}
+.face::before,.face::after{width:26px;height:26px}
+:root[data-skin="nebula"] .face::before,:root[data-skin="nebula"] .face::after{font-size:15px;width:auto;height:auto}
+:root[data-skin="nebula"] .face::before{top:10px;left:11px}
+:root[data-skin="nebula"] .face::after{bottom:10px;right:11px}
+:root[data-skin="nebula"] .card{transition-duration:.9s}
+:root[data-skin="nebula"] .card.flipped{transform:rotateX(180deg)}
+:root[data-skin="nebula"] .face.back{transform:rotateX(180deg)}
+:root[data-skin="abyss"] .card{transition:transform 1s cubic-bezier(.45,1.35,.4,1)}
+.face.front{justify-content:space-between;background:
+  radial-gradient(ellipse 80% 60% at 50% 120%, rgba(var(--acc-rgb),.14), transparent 70%),
+  radial-gradient(ellipse 60% 50% at 100% 0%, rgba(var(--acc2-rgb),.15), transparent 70%), var(--glass2)}
+.face.back{transform:rotateY(180deg)}
+.face.back::before,.face.back::after{border-color:var(--acc2);color:var(--acc2)}
+:root[data-skin="abyss"] .face.back::before{background:linear-gradient(90deg,transparent,rgba(var(--acc2-rgb),.7),transparent)}
+.ftop{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.fq{font-family:var(--f-q);font-weight:var(--fq-weight);font-size:var(--fq-size);line-height:1.3;margin:0;text-wrap:balance}
+.fhint{font-family:var(--f-ui);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:10px}
+.fhint::before{content:"";width:8px;height:8px;border:1px solid var(--acc);transform:rotate(45deg);animation:blink 2s infinite}
+:root[data-skin="abyss"] .fhint::before{border-radius:50%;transform:none;background:rgba(var(--acc-rgb),.5);box-shadow:0 0 10px var(--acc)}
+:root[data-skin="nebula"] .fhint::before{content:"✦";border:0;transform:none;width:auto;height:auto;color:var(--acc);font-size:10px}
+@keyframes blink{50%{opacity:.25}}
+.fscroll{flex:1;overflow-y:auto;margin-top:14px;padding-right:6px;min-height:0;overscroll-behavior:contain}
+.fscroll::-webkit-scrollbar{width:6px}
+.fscroll::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
+.deckctl{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px}
+.deckctl .btn{min-width:110px}
+.keys{text-align:center;margin-top:14px;font-family:var(--f-ui);font-size:.7rem;letter-spacing:.12em;color:var(--faint)}
+kbd{font-family:var(--f-ui);border:1px solid var(--line);padding:1px 6px;margin:0 2px;color:var(--dim);border-radius:3px}
+
+footer{margin-top:60px;padding-block:24px 40px;border-top:1px solid var(--line);font-size:.78rem;color:var(--faint);font-family:var(--f-ui);letter-spacing:.03em}
+
+/* Right-gutter question map */
+.rail{position:fixed;z-index:5;top:50%;right:max(16px,calc((100vw - 1120px)/4 - 92px));width:184px;transform:translateY(-46%);padding:18px 16px 16px;display:none}
+@media (min-width:1520px){.rail{display:block}}
+.rail-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px;font-family:var(--f-ui);font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--acc)}
+.rail-h b{font-family:var(--f-disp);font-size:1.05rem;letter-spacing:0;color:var(--ok);font-weight:var(--h1-weight);font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(var(--ok-rgb),.4)}
+:root[data-skin="nebula"] .rail-h b{font-size:1.7rem}
+.rail-sec{margin-top:14px}
+.rail-name{display:flex;justify-content:space-between;font-family:var(--f-ui);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+.rail-name i{font-style:normal;color:var(--faint);font-variant-numeric:tabular-nums}
+.rail-dots{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.rd{aspect-ratio:1/1;border:1px solid var(--line2);background:rgba(var(--acc-rgb),.04);border-radius:var(--r-small);font-family:var(--f-ui);font-size:.58rem;font-weight:600;color:var(--faint);padding:0;display:grid;place-items:center;transition:background .25s,border-color .25s,box-shadow .25s,color .25s}
+.rd:hover{border-color:var(--acc);color:var(--ink)}
+.rd.done{background:rgba(var(--ok-rgb),.2);border-color:rgba(var(--ok-rgb),.6);color:var(--ok)}
+.rd.cur{border-color:var(--acc);color:var(--on-acc);background:var(--acc);box-shadow:0 0 14px rgba(var(--acc-rgb),.75)}
+:root[data-skin="abyss"] .rd{border-radius:50%}
+:root[data-skin="nebula"] .rd{border-radius:50%}
+.rail-foot{margin-top:14px;font-family:var(--f-ui);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.q{scroll-margin-top:84px}
+.q.ping{animation:ping 1.3s ease-out}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(var(--acc-rgb),.55)}100%{box-shadow:0 0 0 22px rgba(var(--acc-rgb),0)}}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding-block:30px 18px;gap:10px}
+  .herofig{max-width:320px;max-height:320px;order:-1}
+  .sectors{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .skins em{display:none}
+  .skins button{padding:3px}
+}
+@media (max-width:560px){
+  .brand b{display:none}
+  .cluster{gap:8px}
+  .modes button{padding:7px 9px;letter-spacing:.08em;font-size:.7rem}
+  .q{padding:18px 16px}
+  .face{padding:22px 18px}
+  .split{grid-template-columns:1fr}
+  .deckctl .btn{min-width:0;flex:1 1 40%}
+  .stats{gap:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+
+<canvas id="bggl" class="layer" aria-hidden="true"></canvas>
+<canvas id="bg2d" class="layer" aria-hidden="true"></canvas>
+<div class="layer vignette" aria-hidden="true"></div>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand"><i></i><b>Local AI Field Guide</b></div>
+    <div class="cluster">
+      <div class="skins" role="group" aria-label="Theme">
+        <button data-skin="hud" aria-pressed="true" title="HUD"><span class="sw sw-hud"></span><em>HUD</em></button>
+        <button data-skin="nebula" aria-pressed="false" title="Nebula Observatory"><span class="sw sw-nebula"></span><em>Nebula</em></button>
+        <button data-skin="abyss" aria-pressed="false" title="Abyssal Station"><span class="sw sw-abyss"></span><em>Abyss</em></button>
+      </div>
+      <div class="modes" role="group" aria-label="Mode">
+        <button id="m-study" aria-pressed="true">Study</button>
+        <button id="m-flash" aria-pressed="false">Cards</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<aside class="rail hud" id="rail" aria-label="Question map"></aside>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Artificial Intelligence · Local LLMs · Exam prep</div>
+      <h1 id="h1">Local AI Field Guide<span>Models · inference · agents</span></h1>
+      <p class="lede">A practice deck for explaining local LLM and agent concepts in context. Use Study mode to learn the model answers, then switch to Cards and test recall until every sector reads 100%.</p>
+      <div class="stats">
+        <div class="stat"><b id="s-q">0</b><small>Questions</small></div>
+        <div class="stat"><b id="s-m">0</b><small>Marks</small></div>
+        <div class="stat ok"><b id="s-l">0%</b><small>Marks learned</small></div>
+      </div>
+    </div>
+    <figure class="herofig">
+      <canvas id="hero" role="img" aria-label="Animated illustration"></canvas>
+      <figcaption id="hero-cap">Local models · systems · agents</figcaption>
+    </figure>
+  </section>
+
+  <nav class="sectors" id="sectors" aria-label="Sectors"></nav>
+
+  <section id="study">
+    <div class="tools">
+      <label class="search" for="q-search"><span></span><input id="q-search" type="search" placeholder="Search questions and answers" autocomplete="off"></label>
+      <button class="btn" id="reveal-all" aria-pressed="false">Reveal all</button>
+      <button class="btn ghost" id="hide-learned" aria-pressed="false">Hide learned</button>
+    </div>
+    <div id="list"></div>
+  </section>
+
+  <section id="flash" hidden>
+    <div class="deck">
+      <div class="deckbar">
+        <div class="counter" id="counter">01 <small>/ 25</small></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn ghost" id="d-shuffle">Shuffle</button>
+          <button class="btn ghost" id="d-unlearned" aria-pressed="false">Unlearned only</button>
+        </div>
+      </div>
+      <div class="trail"><i id="trail" style="width:0"></i></div>
+      <div class="stage">
+        <div class="card" id="card" tabindex="0" aria-live="polite">
+          <div class="face front hud" id="front"></div>
+          <div class="face back hud" id="back"></div>
+        </div>
+      </div>
+      <div class="deckctl">
+        <button class="btn ghost" id="d-prev">◂ Prev</button>
+        <button class="btn" id="d-flip">Flip</button>
+        <button class="btn ghost" id="d-next">Next ▸</button>
+      </div>
+      <div class="deckctl" style="margin-top:10px">
+        <button class="btn warn" id="d-again">Again</button>
+        <button class="btn good" id="d-got">Got it ✓</button>
+      </div>
+      <div class="keys"><kbd>Space</kbd> flip · <kbd>←</kbd><kbd>→</kbd> move · <kbd>1</kbd> again · <kbd>2</kbd> got it</div>
+    </div>
+  </section>
+
+  <footer>
+    Practice content is based on <em>Glossary Local_LLMs_and_Agents version 2</em> and the two supplied test-style prompts. Answers are study guidance: always align terminology with your lecturer's notes. Progress and theme are saved in this browser only.
+  </footer>
+</main>
+
+<script>
+
+/* ---------- content helpers ---------- */
+const T=(n,m,t)=>`<div class="term"><dt>${n}<span class="mk">${m}</span></dt><dd>${t}</dd></div>`;
+const DL=(...x)=>`<dl class="terms">${x.join('')}</dl>`;
+const P=(l,t,m)=>`<li>${l?`<b>${l}</b> `:''}${t}${m?`<span class="mk">${m}</span>`:''}</li>`;
+const UL=(...x)=>`<ul class="pts">${x.join('')}</ul>`;
+const OL=(...x)=>`<ol class="pts">${x.join('')}</ol>`;
+const NOTE=(l,t)=>`<p class="note"><b>${l}</b>${t}</p>`;
+const H=t=>`<h4>${t}</h4>`;
+let svgN=0;
+function marker(id,cls){return `<marker id="${id}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="sv-head ${cls}"/></marker>`}
+
+function highwaySVG(){
+  const k=++svgN, a='hwA'+k, b='hwB'+k, c='hwC'+k;
+  const nodes=[['Raw source','immediate'],['Real time','seconds'],['Business','activity','minutes'],['Top line','24 hours'],['DW & long','time series','daily · annual']];
+  let g='';
+  nodes.forEach((n,i)=>{
+    const x=15+i*180;
+    g+=`<rect x="${x}" y="88" width="150" height="86" rx="3" class="sv-box${i===4?' alt':''}"/>`;
+    if(n.length===2){g+=`<text x="${x+75}" y="124" text-anchor="middle" class="sv-t">${n[0]}</text><text x="${x+75}" y="148" text-anchor="middle" class="sv-s">${n[1]}</text>`}
+    else{g+=`<text x="${x+75}" y="116" text-anchor="middle" class="sv-t">${n[0]}</text><text x="${x+75}" y="134" text-anchor="middle" class="sv-t">${n[1]}</text><text x="${x+75}" y="158" text-anchor="middle" class="sv-s">${n[2]}</text>`}
+    if(i<4){g+=`<line x1="${x+152}" y1="131" x2="${x+176}" y2="131" class="sv-line" marker-end="url(#${a})"/><text x="${x+165}" y="122" text-anchor="middle" class="sv-k">ETL</text>`}
+  });
+  return `<div class="diagram"><svg viewBox="0 0 900 250" role="img" aria-label="Data highway: five caches of increasing latency from raw source to data warehouse, with ETL between them and backflow from right to left">
+  <defs>${marker(a,'')}${marker(b,'back')}${marker(c,'grad')}</defs>
+  <path d="M845 72 C 845 40, 60 40, 60 72" class="sv-line back flow" marker-end="url(#${b})"/>
+  <text x="450" y="32" text-anchor="middle" class="sv-c">BACKFLOW · durable keys &amp; dimensions enrich early caches</text>
+  ${g}
+  <line x1="30" y1="212" x2="862" y2="212" class="sv-line grad" marker-end="url(#${c})"/>
+  <text x="450" y="238" text-anchor="middle" class="sv-k">LATENCY ↑  ·  DATA QUALITY ↑</text>
+  </svg></div>`;
+}
+function cycleSVG(){
+  const k=++svgN, a='cyA'+k;
+  const N=[[280,70,'1. Monitor activity','What is happening?'],[442,162,'2. Identify exceptions','What is unusual?'],[380,312,'3. Causal factors','Why did it happen?'],[180,312,'4. Model alternatives','What could we do?'],[118,162,'5. Act & track','Did it work?']];
+  let g='';
+  N.forEach(([x,y,t,s],i)=>{g+=`<rect x="${x-74}" y="${y-28}" width="148" height="56" rx="3" class="sv-box${i===4?' alt':''}"/><text x="${x}" y="${y-4}" text-anchor="middle" class="sv-t" style="font-size:13px">${t}</text><text x="${x}" y="${y+16}" text-anchor="middle" class="sv-s">${s}</text>`});
+  const L=[[352,86,428,128],[440,192,402,278],[304,312,258,312],[164,282,128,194],[120,132,200,86]];
+  L.forEach(([x1,y1,x2,y2],i)=>{g+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sv-line${i===4?' back':''}" marker-end="url(#${a})"/>`});
+  return `<div class="diagram"><svg viewBox="0 0 560 360" style="min-width:460px;max-width:620px;margin:0 auto" role="img" aria-label="Analytic cycle: monitor activity, identify exceptions, determine causal factors, model alternatives, take action and track results, then back to monitoring">
+  <defs>${marker(a,'')}</defs>${g}
+  <text x="280" y="196" text-anchor="middle" class="sv-c">RESULTS FEED</text><text x="280" y="214" text-anchor="middle" class="sv-c">THE NEXT ROUND</text>
+  </svg></div>`;
+}
+
+/* ---------- sectors ---------- */
+const SECTORS={
+  fr:{code:'Sector A',name:'Front Room',long:'BI applications & metadata'},
+  olap:{code:'Sector B · SU4',name:'OLAP Cubes',long:'Cubes, design & storage modes'},
+  bd:{code:'Sector C · SU5',name:'Big Data',long:'Kimball Ch 21 — big data analytics'}
+};
+
+/* ---------- questions (exactly as given) ---------- */
+const DATA=[
+/* ===== FRONT ROOM ===== */
+{s:'fr',n:1,m:24,src:'Slides + textbook',
+ q:'Explain the following terms and concepts as they are used by Kimball.',
+ sub:'Ad hoc queries · Analytical application · BI application · BI portal · Dashboards and scorecards · Data mining and models · Dependency or impact analysis · Direct access queries · Lineage analysis · Operational BI · Standard reports',
+ a:()=>DL(
+  T('Ad hoc queries',1,'Queries that business users (power users) build themselves from scratch against the data warehouse, usually to analyse a pressing problem or opportunity. To many business people, "ad hoc" simply means changing the parameters of an existing report.'),
+  T('Analytical application',3,'A BI application that contains powerful analysis algorithms in addition to normal database queries. Pre-built analytic application packages include budgeting, forecasting and business activity monitoring (BAM). The analytic cycle must be applied explicitly to analytic applications, so they guide users through analysing a business situation instead of just reporting.'),
+  T('BI application',2,'The initial set of reports and analyses built in the front room, ranging from simple parameter-driven standard reports at one end to complex analytic systems or operational-level applications at the other. Their primary role is to give the knowledge workers who won\'t build their own reports an appropriate way to access the information in the data warehouse.'),
+  T('BI portal',2,'The business users\' primary access point for BI applications. A mature system has too many applications for a simple list, so the portal is a high-level interface that imposes a rational order on them. Through it users reach standard reports, dashboards and other BI applications, plus metadata reports, documentation and tutorials. It must meet the same strict design requirements as the BI applications.'),
+  T('Dashboards and scorecards',2,'Multi-subject user interfaces that show key performance indicators (KPIs) textually and graphically. They are used in the monitor activity stage of the analytic cycle to give a report card on the state of the business.'),
+  T('Data mining and models',2,'Exploratory analysis of large "observation sets", usually downloaded from the data warehouse to data mining software. Data mining is also used to create the underlying models used by some analytic and operational BI applications.'),
+  T('Dependency or impact analysis',3,'Identifying the impact of making a change to the DW/BI system. A change to a source system data model affects the ETL process, may change the target data model, then affects database definitions based on that element (indexes, partitions, aggregates) and every report that includes it. If all the metadata is in one place, or connected by common keys and IDs, this impact is fairly easy to understand.'),
+  T('Direct access queries',2,'The classic ad hoc requests initiated by business users from desktop query tool applications. They sit at the strategic, ad hoc access end of the range of BI applications, used by business analysts and power users.'),
+  T('Lineage analysis',3,'The reverse of impact analysis. It picks an element and determines where it came from and what went into its creation. It is important for understanding the contents and source of a column, table or other object, and is essentially system-generated documentation. In its most rigorous form it uses audit metadata to determine the origin of any fact or dimension row, which some compliance scenarios require.'),
+  T('Operational BI',2,'Real-time or near-real-time queries of operational status, often accompanied by transaction write-back interfaces. It sits at the tactical end: each execution is usually low value, has short-term impact and is predefined, and it is used across all transactions in an operational system or a large set of users, such as all call-centre agents.'),
+  T('Standard reports',2,'Regularly scheduled reports, typically delivered via the BI portal or as spreadsheets or PDFs to an online library. They are prebuilt and parameter-driven, they are the primary access tool for most business users, and they are the starting point of the analytic cycle.')
+ )},
+{s:'fr',n:2,m:2,src:'Slides + textbook',q:'What is the primary role of BI applications?',
+ a:()=>UL(
+  P('','Most knowledge workers in an organisation will not build their own reports, so you must give them an appropriate way to access the information in the data warehouse. This is the primary role of BI applications.'),
+  P('','For this majority of business users, the BI applications are the only view of the DW/BI system they will have. They turn the warehouse data into meaningful information that supports decisions.'))},
+{s:'fr',n:3,m:3,src:'Slides + textbook',q:'Explain why good design of BI applications is important.',
+ a:()=>UL(
+  P('','For most users the BI applications are the only view of the DW/BI system. If the applications are confusing, perform poorly, or are unappealing or inaccurate, they taint the entire DW/BI system.'),
+  P('','Users will then turn to alternative sources for the information or, worse, start projects to build their own data warehouses or marts. (The slides make the same point: decision makers are powerful, and if they don\'t want to use the BI system, they won\'t.)'),
+  P('','People vary widely in technical skill and analytical sophistication, so well-designed applications are needed to support the whole range of users. Handing everyone a tool and expecting them to build their own reports doesn\'t work.'))
+  +NOTE('Bottom line','In Kimball\'s words: the BI applications must be great.')},
+{s:'fr',n:4,m:10,src:'Textbook',q:'Describe five design requirements for BI applications.',
+ a:()=>UL(
+  P('Be correct:','BI applications must provide accurate audit reports and document any differences compared to other systems.',2),
+  P('Perform well:','the average query must return quickly; a response time of a few seconds is a good goal.',2),
+  P('Be easy to use:','anyone with enough skill to order a book online should be able to use at least the standard reports, and getting customised results should take only a few mouse clicks.',2),
+  P('Look good:','tools and reports should be clear and attractive.',2),
+  P('Be a long-term investment:','applications must be properly documented, maintained, enhanced and extended.',2))
+  +NOTE('Also','The BI portal must meet these same requirements.')},
+{s:'fr',n:5,m:4,src:'Textbook',q:'Explain the difference between strategic and tactical types of business intelligence needs.',
+ a:()=>`<p>Kimball's Figure 11-1 shows the organisation's reporting needs as a range from strategic to tactical (operational).</p>
+ <div class="split"><div><h5>Strategic</h5>${UL(P('','Ad hoc access: users build their own queries against the warehouse from scratch, using direct access query, reporting and data mining.'),P('','Done by business analysts or power users.'),P('','Creates more complex analyses to address a pressing problem or opportunity, often answering strategic what-if questions.'))}</div>
+ <div><h5>Tactical</h5>${UL(P('','Operational BI and operational reporting.'),P('','Each execution is usually low value, has short-term impact and is predefined.'),P('','Used across all transactions in an operational system or across a large set of users, such as all the agents in a call centre.'))}</div></div>`
+ +NOTE('In between','Push-button access (standard reports, dashboards and scorecards, analytic applications), where the large majority of users fall. They need prebuilt, parameterised reports.')},
+{s:'fr',n:6,m:12,src:'Textbook',q:'Describe the analytic cycle for BI analysis. Draw a diagram and give a short description of each stage.',
+ a:()=>`<p>The analytic cycle is the generalised process business users follow for analytic decision making: from monitoring activity, to identifying a problem or opportunity, to deciding on an action, and back to monitoring the results of that action.</p>`
+ +cycleSVG()+`<p style="color:var(--dim);font-size:.85rem">Draw this as a closed loop. The arrow from stage 5 returns to stage 1.</p>`
+ +OL(
+  P('Monitor activity:','standard reports are the starting point. Users compare current results with previous periods or plan to get a report card on the state of the business. Requirements focus on the presentation layer: dashboards, portals and scorecards. Many data warehouse implementations stop at this stage and declare success.'),
+  P('Identify exceptions:','"what\'s the matter?" or "where are the problems?" The emphasis is on finding exceptions to normal performance, and opportunities, so users can focus on what deserves attention instead of wading through all the data. It needs distribution servers that send alerts to users\' devices based on exception triggers, and visualisation tools (trend lines, spark lines, maps, clusters).'),
+  P('Determine causal factors:','understanding the "why", the root causes of the exceptions, by finding reliable relationships between the variables that drive exceptional performance. It needs statistical tools and data mining algorithms (association, sequencing, classification, segmentation) to quantify cause and effect, and often new data to investigate the causes.'),
+  P('Model alternatives:','building on the cause-and-effect relationships to develop models that evaluate decision alternatives. The warehouse\'s historical data can predict the effect of a decision by finding a similar past situation. What-if analysis and simulation are the final goal of the cycle, supported by sensitivity analysis, Monte Carlo simulation and goal-seeking optimisation.'),
+  P('Take action and track results:','ideally a closed loop that feeds recommended actions back to the operational system through APIs or SOA calls. Results of decisions are recorded (by enhancing dimensional models or building performance tracking databases) to see which decisions worked. Distribution services let users respond with actions, not just receive alerts. The results are analysed to fine-tune the process, rules and models, which leads back to monitoring activity.'))
+ +H('Implications for BI application design')+UL(
+  P('','The cycle is circular: the result of each cycle becomes input to the next.'),
+  P('','It underlies all analysis, from a quick query (where the cycle happens in the analyst\'s head) to a long programme review, but it must be explicitly built into analytic applications.'),
+  P('','A comprehensive BI environment must move users beyond standard reports and proactively guide them through analysing a business situation. The goals are to proactively guide users beyond basic reporting, identify and understand exceptional performance, capture decision-making best practices for each exceptional situation, and share those best practices across the organisation.'),
+  P('','Each stage needs extra capabilities in the architecture (alerting, visualisation, statistical and data mining tools, write-back to operational systems), so the cycle helps make sure each analytic opportunity gets a complete solution.'))},
+{s:'fr',n:7,m:12,src:'Slides + textbook',q:'Describe the most important BI application types.',
+ a:()=>UL(
+  P('Direct access queries:','the classic ad hoc requests initiated by business users from desktop query tool applications.',2),
+  P('Standard reports:','regularly scheduled reports, typically delivered via the BI portal or as spreadsheets or PDFs to an online library.',2),
+  P('Analytic applications:','applications containing powerful analysis algorithms in addition to normal database queries. Pre-built packages include budgeting, forecasting and business activity monitoring (BAM).',2),
+  P('Dashboards and scorecards:','multi-subject user interfaces showing key performance indicators (KPIs) textually and graphically.',2),
+  P('Data mining and models:','exploratory analysis of large "observation sets", usually downloaded from the data warehouse to data mining software. Data mining also creates the models used by some analytic and operational BI applications.',2),
+  P('Operational BI:','real-time or near-real-time queries of operational status, often accompanied by transaction write-back interfaces.',2))
+  +NOTE('Delivery','Through the BI portal and custom front ends, handheld device interfaces, and instantaneous BI (EII). This broad range of applications is why the presentation server must be flexible, symmetric and scalable.')},
+{s:'fr',n:8,m:4,src:'Slides + textbook',q:'Why are metadata services so important in the front room?',
+ a:()=>UL(
+  P('Metadata defines the front end world.','Most BI tools work with a metadata model that describes the structure of the warehouse for the tool and simplifies it for the user.',1),
+  P('It shields users from complexity (content simplification):','it limits their view to subsets of tables and columns, predefines join rules, computed values and standard filters, and adds descriptions and organising categories.',1),
+  P('Metadata reporting helps users find information:','users can browse the metadata for the subject area, table, column or report they need, see definitions and derivations, and link straight to the right report or tool. The payback is a self-sufficient user community.',1),
+  P('Business metadata builds understanding and trust:','it tells users, in their own terms, what data is available, where it comes from, what it means and how it relates (slides).',1))},
+{s:'fr',n:9,m:7,src:'Slides + textbook',q:'What does usage monitoring in the front room involve, and why is it important?',
+ a:()=>H('What it involves')+`<p>Capturing information about the use of the data warehouse, such as user query activity, query times and concurrent users. This is process metadata (report, query and application execution statistics; user query logs). You can build a basic usage monitor yourself, buy a package, or use a BI tool's own support.</p>`
+ +H('Why it is important: five reasons')+UL(
+  P('Performance:','use usage information to tune the DW/BI system effectively.'),
+  P('User support:','monitor query activity during the day to intervene on poorly formed queries and learn who needs help building more efficient queries.'),
+  P('Marketing:','publish simple usage statistics to show management how their investment is being used. A growth curve is a great marketing tool; a flat or falling curve is a call to action for the DW/BI team.'),
+  P('Planning:','analyse usage growth, average query time, concurrent user counts, database sizes and load times to quantify the need and timing for capacity increases.'),
+  P('Compliance:','some industries (such as health care) or kinds of data (such as HR or financial data) require an audit trail of all user query activity.'))},
+{s:'fr',n:10,m:8,src:'Textbook',q:'Describe the major query management services that must be included in the DW architecture.',
+ a:()=>`<p>Query management services manage the translation of the user's query specification on screen into the query syntax submitted to the server, the execution of the query on the database, and the return of the result set to the desktop. Many of them are metadata driven.</p>`+UL(
+  P('Query reformulation:','most interesting business questions need a lot of data manipulation. This service parses an incoming query, works out how best to resolve it, and generates complex queries in the language of the presentation server, often in multiple passes where the results of one query feed the next.',2),
+  P('Query retargeting and drill across:','parses the query, looks up in the metadata where the elements actually exist, and redirects the query or its parts accordingly, including heterogeneous joins and set functions such as union and minus. This allows fact tables to sit on separate platforms. Drill across lets users query two fact tables (such as manufacturing costs and customer sales), possibly on different servers, and integrate the results seamlessly.',2),
+  P('Aggregate navigation:','a special case of retargeting that recognises when a query can be satisfied by an aggregate table instead of summing detail records on the fly. It can live in the presentation server, an application server (which allows cross-platform queries), or a BI tool\'s metadata model.',2),
+  P('Query governing and prioritisation:','protects the warehouse from runaway queries. Simple limits on run time or rows returned act only after the fact, so effective governing estimates the effort before the query runs (for example from the optimiser\'s query plan), then checks permission, offers to schedule it later, or asks the user to reformulate it. It also prioritises specific users and queries, such as the standard reports account or the CEO.',2))},
+{s:'fr',n:11,m:8,src:'Slides + textbook',q:'Discuss the value of metadata integration in the DW/BI system architecture.',
+ a:()=>H('The problem')+`<p>Most tools create and manage their own metadata in a local repository, so a DW/BI system has several repositories with overlapping content. The ETL tool, the BI tool and the database each keep a definition of the same target table. This combination causes the problems that integration solves.</p>`
+ +H('The value of a single integrated repository')+UL(
+  P('Impact analysis:','identifies the impact of a change. A source data model change affects the ETL, the target model, database definitions (indexes, partitions, aggregates) and reports. With metadata in one place, or linked by common keys and IDs, the impact is easy to understand.'),
+  P('Audit and documentation:','lineage analysis, the reverse of impact analysis, shows where an element came from and what went into it. It is system-generated documentation, and in its most rigorous form traces any fact or dimension row to its origin, which some compliance scenarios require.'),
+  P('Metadata quality and management:','copies kept in different systems inevitably get out of sync. Technical errors show up when a process fails, but business metadata errors don\'t: an updated attribute description may not reach the BI tool, so users misunderstand results. A single repository holds one entry that everyone sees.'))
+ +`<p>From the slides: metadata is the DNA of the DW, defining the structures, operations and contents of the system and how its elements work together, and a metadata-driven architecture gives flexibility by buffering the components.</p>`
+ +NOTE('Extra marks','A fully standard repository (CWM, XMI, MOF) is unlikely because vendor support is slow, so the realistic options are a single source vendor, a core vendor\'s metadata product, or doing it yourself with a focus on business metadata.')},
+{s:'fr',n:12,m:4,src:'Textbook',q:'Name four principles that Kimball prescribes for working with metadata.',
+ a:()=>UL(
+  P('','Inventory all of your metadata so you know what you have.',1),
+  P('','Subject your metadata to standard software library practices, including version control, version migration, and reliable backup and recovery.',1),
+  P('','Document your metadata. This is known as metametadata.',1),
+  P('','Appreciate the value of your metadata assets.',1))},
+
+/* ===== OLAP (SU4) ===== */
+{s:'olap',n:1,m:17,src:'Kimball glossary + slides 35/47',q:'Kimball\'s terms',
+ sub:'Cube · Data mart · MDX · Multidimensional database · OLAP · OLTP · Semantic layer · Slice and dice',
+ a:()=>DL(
+  T('Cube',2,'A cube is a dimensional structure on a multidimensional (OLAP) database. It stores measures at the intersections of the dimensions.'),
+  T('Data mart',2,'A data mart is a summarised, departmental, independent dataset that isn\'t part of an overall architecture. Kimball used the term for a business-process dimensional model.'),
+  T('MDX',2,'MDX is the query language of many OLAP databases and the closest thing to a standard OLAP language. It is like SQL\'s SELECT, but with richer analytic functions.'),
+  T('Multidimensional database',3,'It stores data in a predefined dimensional structure with precalculated aggregates instead of relational tables. It doesn\'t scale as large as a relational database, but gives faster queries and a richer analytic language. It is also called MOLAP.'),
+  T('OLAP',2,'OLAP is a loosely defined set of principles that give a dimensional framework for business intelligence. It supports fast, interactive analysis from many views.'),
+  T('OLTP',2,'OLTP covers the activities and systems for entering data reliably into a database. It usually means relational databases, but applies to any transaction processing environment.'),
+  T('Semantic layer',2,'A semantic layer is an interface layer between the user\'s BI tool and the physical database. It shows users business names and relationships instead of table structures.'),
+  T('Slice and dice',2,'Slice and dice is accessing the warehouse through any of its dimensions equally. Users can separate and combine the data in almost endless combinations.'))},
+{s:'olap',n:2,m:3,src:'Textbook p. 247',q:'Shortcomings of a relational store as the core BI source',
+ a:()=>UL(
+  P('','It has no rich metadata to help users navigate the data and build queries.',1),
+  P('','It has no powerful analytic calculations in a context-sensitive query language.',1),
+  P('','It can\'t give fast, consistent performance across a wide range of ad hoc queries.',1))},
+{s:'olap',n:3,m:15,src:'Textbook pp. 247–249',q:'Advantages of OLAP cubes over a relational DB as the primary query server',
+ a:()=>`<p style="color:var(--dim)">Five advantages, 3 marks each.</p>`+UL(
+  P('User-oriented metadata.','The cube holds metadata about facts vs. dimensions, hierarchies and drill-down paths, and groupings of attributes and facts. It also combines facts from different business processes through conformed dimensions. These are defined once on the server, and every client tool can use them with no extra setup.',3),
+  P('Central calculations.','Business calculations (e.g. profit, year-to-date, top 10 customers) are defined once in the cube. Every user gets the same answer, whatever tool they use. The OLAP language can handle much more complex calculations than SQL.',3),
+  P('Complex security.','A cube can secure detailed data while leaving summaries open. This is hard to do with ad hoc access to a relational database. It makes wide ad hoc access safe.',3),
+  P('Query performance.','Performance is the main reason people adopt OLAP. A cube gives fast dimensional queries in a way that is cheaper and easier to manage than tuning a relational system. The speed-up is invisible to the user.',3),
+  P('Aggregation management.','Aggregations are precomputed summaries, and they are the biggest single performance gain. The OLAP server helps design and maintain them. Queries use the right aggregation automatically.',3))
+  +NOTE('Spare point','If users don\'t query the relational DW directly, it needs fewer indexes. The cube, including its aggregations, is smaller than the indexes it replaces.')},
+{s:'olap',n:4,m:9,src:'Textbook pp. 250–252',q:'Three design issues when planning the OLAP design',
+ a:()=>UL(
+  P('Cube content.','Decide how many fact tables go into one cube. More fact tables let users combine data across business processes through conformed dimensions. But performance drops as the cube gets bigger. About 5 is comfortable, 15 is often fine, and 50 is too many.',3),
+  P('Cube granularity.','Decide which dimensions, and at what level of detail, are included. Best practice is the same grain as the relational fact tables, because aggregations keep queries fast. Only use a coarser grain for serious resource or usability problems.',3),
+  P('Cube usage.','Decide how much user access will go through the cube. This is usually 90–100% of ad hoc queries and 50–100% of standard reports. Document any cases where users must query the relational warehouse directly.',3))},
+{s:'olap',n:5,m:6,src:'Textbook p. 292',q:'Three storage modes for OLAP data',
+ a:()=>`<div class="tablebox"><table><thead><tr><th>Mode</th><th>Detail data</th><th>Aggregations</th></tr></thead><tbody>
+ <tr><td>MOLAP</td><td>Multidimensional</td><td>Multidimensional</td></tr>
+ <tr><td>ROLAP</td><td>Relational</td><td>Relational</td></tr>
+ <tr><td>HOLAP</td><td>Relational</td><td>Multidimensional</td></tr></tbody></table></div>`+UL(
+  P('MOLAP (multidimensional):','the detail data and the aggregations are both stored in the OLAP server\'s multidimensional format. It gives the fastest queries.',2),
+  P('ROLAP (relational):','the detail data and the aggregations both stay in the relational database. It is the slowest to process.',2),
+  P('HOLAP (hybrid):','the detail data stays in the relational database, and the aggregations are stored in multidimensional format. Detail queries still go to the relational database.',2))},
+{s:'olap',n:6,m:6,src:'Textbook p. 293',q:'Why MOLAP is the preferred storage mode',
+ a:()=>UL(
+  P('Fastest queries.','MOLAP is built for dimensional data. Its compression and indexing make queries much faster than ROLAP or HOLAP.',1),
+  P('Small storage.','MOLAP data takes about 20% of the relational size. This is probably smaller than one index on the fact table.',1),
+  P('Extra copy is worth it.','MOLAP is another copy of the data, but so is an index, and nobody avoids indexes for that reason. MOLAP gives more benefit than any single index.',1),
+  P('Processing isn\'t slower.','ROLAP is the slowest to process, and HOLAP is only slightly faster than MOLAP.',1),
+  P('Dimensions benefit too.','Dimensions should also be stored as MOLAP.',1),
+  P('The other modes are niche.','They exist mostly as a marketing and future-proofing hedge. The main exception is ROLAP for near-real-time data.',1))},
+
+/* ===== BIG DATA (SU5) ===== */
+{s:'bd',n:1,m:6,src:'Ch 21',q:'Describe 3 ways in which RDBMS architectures are being extended for big data.',
+ af:'Beskryf 3 wyses waarop RDBBS se argitekture uitgebrei word vir grootdata in datapakhuise.',
+ a:()=>UL(
+  P('Complex structured data types —','load/process vectors, matrices, custom hyperstructured data.',2),
+  P('Unstructured &amp; semistructured types —','text, images, video, name-value pair collections ("data bags").',2),
+  P('Processing inside the DBMS inner loop','with UDFs written by business user analysts, rather than storing blobs for later interpretation by BI apps.',2))
+  +NOTE('Alternative','Process data twice — RDBMS as fact extractor, results fed back as relational rows.')},
+{s:'bd',n:2,m:3,src:'Ch 21',q:'What is the purpose of including UDFs in a DW presentation server?',
+ af:'Wat is die doel daarvan om gebruikergedefinieerde funksies in \'n DP-aanbiedingbediener in te sluit?',
+ a:()=>UL(
+  P('','Hosting new data types as blobs isn\'t enough; to own big data the RDBMS must process them.',1),
+  P('','UDFs let that processing happen within the DBMS inner loop, close to the data, not later in a BI app.',1),
+  P('','They are specially crafted by business user analysts and can be arbitrarily complex, supporting analytics on new data types.',1))},
+{s:'bd',n:3,m:3,src:'Ch 21',q:'Kimball recommends processing big data twice through the RDBMS. What is the use case?',
+ af:'Kimball beveel aan dat groot data twee keer deur die RDBMS verwerk word. Wat is die doel hiervoor?',
+ a:()=>UL(
+  P('First pass:','the RDBMS acts as a fact extractor on the original (raw) data.',1),
+  P('Second pass:','the results are automatically fed back into the RDBMS input',1),
+  P('','…as conventional relational rows, columns and data types, ready for normal analysis.',1))},
+{s:'bd',n:4,m:8,src:'Ch 21',q:'Compare Extended Relational DBMS with MapReduce/Hadoop.',
+ af:'Vergelyk ŉ Uitgebreide Relasionele DBMS met MapReduce/Hadoop as twee moontlike argitekture vir grootdata.',
+ a:()=>`<div class="tablebox"><table><thead><tr><th>Aspect</th><th>Extended RDBMS</th><th>MapReduce / Hadoop</th></tr></thead><tbody>
+ <tr><td>Licensing</td><td>Proprietary (mostly)</td><td>Open source</td></tr>
+ <tr><td>Cost</td><td>Expensive</td><td>Less expensive</td></tr>
+ <tr><td>Data structure</td><td>Data must be structured</td><td>No structuring required</td></tr>
+ <tr><td>Access</td><td>Speedy indexed lookups</td><td>Massive full data scans</td></tr>
+ <tr><td>Relational semantics</td><td>Deep</td><td>Indirect (e.g. Hive)</td></tr>
+ <tr><td>Complex data structures</td><td>Indirect</td><td>Deep</td></tr>
+ <tr><td>Iteration / complex branching</td><td>Indirect</td><td>Deep</td></tr>
+ <tr><td>Transaction processing</td><td>Deep</td><td>Little or none</td></tr>
+ </tbody></table></div><p style="color:var(--dim);font-size:.85rem">One mark per row.</p>`},
+{s:'bd',n:5,m:6,src:'Ch 21',q:'Name the best practices of conventional data warehousing still relevant to big data.',
+ af:'Noem die beste praktyke van konvensionele datapakhuise wat steeds relevant is tot grootdata.',
+ a:()=>UL(
+  P('','Drive the choice of data sources from business needs.',1),
+  P('','Focus incessantly on user interface simplicity and performance.',1),
+  P('','Think dimensionally: divide the world into dimensions and facts.',1),
+  P('','Integrate separate data sources with conformed dimensions.',1),
+  P('','Track time variance with slowly changing dimensions.',1),
+  P('','Anchor all dimensions with durable surrogate keys.',1))},
+{s:'bd',n:6,m:12,src:'Ch 21 + slide 14',q:'Use a diagram to explain what a data highway is and why it is necessary. Give examples of data caches.',
+ af:'Gebruik ŉ diagram om te verduidelik wat ŉ datasnelweg is en waarom dit nodig is. Verskaf voorbeelde van verskillende datakaste.',
+ a:()=>H('Diagram')+highwaySVG()
+ +`<p style="color:var(--dim);font-size:.85rem">Raw Source (immediate) → Real Time (seconds) → Business Activity (minutes) → Top Line (24 h) → DW &amp; Long Time Series (daily/periodic/annual); ETL arrows between; latency &amp; quality increase left→right; backflow arrow right→left.</p>`
+ +H('What')+`<p>A logical highway of up to five physical, distinct caches of increasing latency; data moves via ETL, possibly on multiple paths (e.g. raw → top line cache acting as ODS → DW); data also flows back; much of it stays nonrelational. Implement only the caches you need.</p>`
+ +H('Why — slides (slide 14)')+UL(
+  P('','Prevents bottlenecks (fast data can\'t swamp analytic systems).'),
+  P('','Decouples raw sources from the analytic layer.'),
+  P('','Standardises pipelines (clean, aggregate, enrich step by step).'),
+  P('','Supports metadata and lineage.'))
+ +H('Why — Kimball')+UL(
+  P('','Different analyses need different latency.'),
+  P('','Latency trades off against quality (instant data is dirty, later caches are cleansed and complete).'),
+  P('','Each step adds value.'),
+  P('','Backflow of durable keys/dimensions enriches early caches.'))
+ +H('Examples')+UL(
+  P('Raw source —','credit card fraud detection; immediate CEP (network stability, cyber attack detection).'),
+  P('Real time —','web ad selection; personalised price promotions; online games monitoring.'),
+  P('Business activity —','low-latency KPI dashboards; trouble ticket tracking; process completion tracking; fused CEP reporting; customer service portals; mobile sales apps.'),
+  P('Top line —','tactical reporting; promotion tracking; midcourse corrections based on social media buzz.'),
+  P('DW &amp; long time series —','all reporting; ad hoc querying; historical analysis; MDM; large-scale temporal dynamics; Markov chain analysis.'))},
+{s:'bd',n:7,m:16,src:'Ch 21',q:'Describe best practices for data modelling in a big data environment.',
+ af:'Beskryf beste praktyke om toe te pas op datamodelering in \'n grootdata-omgewing.',
+ a:()=>UL(
+  P('Think dimensionally —','dimensions &amp; facts; attach dimensions to every atomic observation, automated and early.',2),
+  P('Conformed dimensions —','shared enterprise attributes glue sources; combine via sort-merge; incremental rollout.',2),
+  P('Durable surrogate keys —','not natural keys; durable (unchangeable, owned by DW), surrogate (meaningless integer/hash).',2),
+  P('Integrate structured &amp; unstructured —','data in Hadoop/grid joined with DW data via conformed dims + durable keys.',2),
+  P('Slowly changing dimensions —','track time variance as in conventional DW.',2),
+  P('Declare structure at analysis time —','schema-on-read; flexible, cheaper load, multiple views; cost = indexing.',2),
+  P('Load as name-value pairs —','absorb unexpected content at GB/s (rare postage stamp example).',2),
+  P('Data virtualisation —','logical structures (views) over physical data for prototyping; materialise once vetted.',2))}
+];
+DATA.forEach(d=>{d.id=d.s+'-'+d.n;d.html=d.a();d.text=(d.q+' '+(d.af||'')+' '+(d.sub||'')+' '+d.html.replace(/<[^>]+>/g,' ')).toLowerCase()});
+qHead = d=>`<span class="qtag">${SECTORS[d.s].name.toUpperCase()} · Q${pad(d.n)}</span><span class="chip marks">${d.m} marks</span><span class="chip">${d.src}</span>${S.learned.has(d.id)?'<span class="chip learned">● Learned</span>':''}`;
+
+/* ---------- Local LLMs & Agents practice bank ----------
+   The original template's question engine is retained; this content layer is
+   sourced from the supplied Local_LLMs_and_Agents glossary and test prompts. */
+const TERM=(name,marks,definition)=>T(name,marks,definition);
+const MCQ=(options,answer,why)=>`<div class="mcq">${options.map((x,i)=>`<p><b>${String.fromCharCode(65+i)}.</b> ${x}</p>`).join('')}</div>`+NOTE('Correct answer',`${answer}. ${why}`);
+const LOCAL_DATA=[
+{s:'inf',n:1,m:10,src:'Supplied test prompt',q:'"MoE isn’t a footnote in how frontier models are built anymore. MoE is the default architecture for anything competing at the trillion-parameter tier. The next time your LLM-powered feature starts to misbehave even though there was no code change, routing-level non-determinism is worth ruling out before you write it off as just how AI is." Explain your understanding of MoE, frontier models, LLM-powered feature, and routing-level non-determinism.',sub:'MoE · frontier models · LLM-powered feature · routing-level non-determinism',a:()=>DL(
+ TERM('MoE (Mixture of Experts)',4,'A sparse architecture with multiple expert sub-networks and a router. For each token, the router activates only a small number of experts, so the model can have very large total capacity without using every parameter for every token. The active parameter count and routing decisions matter for compute, load balance and reproducibility.'),
+ TERM('Frontier models',1,'The most capable models at the leading edge of current research and engineering, typically distinguished by scale, capability, training cost and benchmark performance.'),
+ TERM('LLM-powered feature',3,'A product capability whose behaviour depends on a large language model at runtime, such as summarisation, code generation, search assistance or an agent response. Its effective system includes prompts, model version, sampling, tools, retrieval data and infrastructure, not just application code.'),
+ TERM('Routing-level non-determinism',2,'Variation introduced when a router makes different expert or execution-path choices for equivalent requests. It can arise from ties, floating-point differences, batching, concurrency or changing load, and can change outputs even when application code is unchanged.') )},
+{s:'inf',n:2,m:10,src:'Supplied test prompt',q:'"We run a 70B model on a workstation with 24 GB of VRAM. Even at Q4_K_M the GGUF file did not fit, so the engine used CPU offloading and generation dropped to a few tok/s, because token generation is memory-bound. A smaller quantization, a quantized KV-cache and speculative decoding together brought us back to a comfortable chat speed." Explain Q4_K_M, CPU offloading, memory-bound, KV-cache, and speculative decoding in this context.',sub:'Q4_K_M · CPU offloading · memory-bound · KV-cache · speculative decoding',a:()=>DL(
+ TERM('Q4_K_M',3,'A K-quant GGUF format that stores weights at roughly four bits per weight on average, using mixed precision and block-wise scaling. The K scheme allocates precision unevenly to preserve quality; M means a medium size/quality trade-off. It is not literally exactly four bits for every stored value.'),
+ TERM('CPU offloading',2,'Moving some model layers, weights or operations from GPU VRAM into system RAM and CPU execution because VRAM is insufficient. PCIe or memory-bus transfers add latency, so tok/s can fall sharply.'),
+ TERM('Memory-bound',2,'A workload limited mainly by moving weights and cache data through the memory hierarchy rather than by arithmetic throughput. Autoregressive decoding repeatedly reads large weight tensors for one new token, so bandwidth and locality dominate.'),
+ TERM('KV-cache',2,'Stored key and value tensors for previous tokens in each attention layer. Reusing them avoids recomputing the whole history at every decoding step, but the cache grows with context length, layers, heads and batch size and consumes VRAM/RAM.'),
+ TERM('Speculative decoding',1,'A small draft model proposes several tokens and the large target model verifies them in batches. Accepted proposals reduce expensive target-model decoding steps while preserving the target model’s distribution when implemented correctly.') )},
+{s:'inf',n:3,m:6,src:'Glossary application',q:'A 13B instruct model fits at Q5_K_M but not at FP16 on a laptop. Recommend a deployment configuration and explain the quality/performance trade-off.',a:()=>UL(P('Quantize weights:','Use a suitable GGUF K-quant such as Q4_K_M or Q5_K_M. Lower bits reduce storage and memory but increase quantization error and may degrade reasoning or factual accuracy.',2),P('Protect the critical memory budget:','Leave room for the runtime, activations and KV-cache; fitting the model file alone is not enough.',2),P('Measure the choice:','Compare perplexity or task benchmarks, TTFT and tok/s on representative prompts rather than assuming a smaller file is always faster.',2))},
+{s:'inf',n:4,m:5,src:'Glossary application',q:'Why can two runs with the same prompt and model produce different answers? Distinguish sampling non-determinism from a deterministic workflow.',a:()=>UL(P('Sampling:','Temperature, top-k and top-p alter how the next token is selected from a probability distribution. With temperature above zero, different random seeds can produce different sequences.',2),P('System variation:','Batching, kernels, floating-point reduction order, MoE routing, retrieval results or external tools can also change the distribution or execution path.',2),P('Determinism is layered:','A deterministic application control flow does not guarantee deterministic model output unless seeds, kernels, routing, inputs and tool results are controlled.',1))},
+{s:'inf',n:5,m:5,src:'Glossary application',q:'Explain why increasing context length can reduce generation speed even when the model weights are unchanged.',a:()=>UL(P('More cache:','Longer prompts create a larger KV-cache, consuming memory and increasing memory traffic.',2),P('Attention work:','Each new token attends over a longer history, so decoding has more context to read and process.',2),P('Trade-off:','Context length is a capacity setting, not free memory; chunking, retrieval and context engineering can keep irrelevant tokens out of the active window.',1))},
+{s:'inf',n:6,m:5,src:'Glossary application',q:'Contrast prefill and decode phases and state which latency metric each most directly influences.',a:()=>UL(P('Prefill:','The engine processes the input prompt, usually in parallel, and builds the initial KV-cache. It strongly affects time to first token (TTFT).',3),P('Decode:','The engine generates one token at a time using the cache. It strongly affects time per output token (TPOT) and perceived tok/s.',2))},
+{s:'rag',n:1,m:8,src:'Glossary application',q:'Describe a retrieval-augmented generation (RAG) pipeline and explain how it can reduce hallucination without retraining the LLM.',a:()=>OL(P('Ingest:','Extract, clean and chunk source documents; preserve useful metadata.',1),P('Embed:','Convert chunks and the user query into vectors with an embedding model.',1),P('Retrieve:','Use vector, lexical or hybrid search to find candidate passages; optionally rerank them.',2),P('Assemble context:','Select relevant passages and place them in a controlled prompt with source identifiers.',2),P('Generate and evaluate:','Ask the LLM to answer from the supplied evidence, then measure groundedness and citation quality. RAG adds current/private evidence but cannot guarantee truth if retrieval or instructions fail.',2))},
+{s:'rag',n:2,m:6,src:'Glossary application',q:'Differentiate an embedding model, a generative LLM and a vector database in a semantic-search system.',a:()=>DL(TERM('Embedding model',2,'Maps text into a fixed-size numerical vector designed so semantically similar inputs are near each other.'),TERM('Generative LLM',2,'Consumes tokens and context to predict and generate a sequence of output tokens; it is not the same component as the embedding model.'),TERM('Vector database',2,'Stores, indexes and searches high-dimensional embeddings efficiently, returning nearest or similar vectors for a query.'))},
+{s:'rag',n:3,m:6,src:'Glossary application',q:'A RAG system misses answers that cross document boundaries. Explain how chunking and chunk overlap affect retrieval quality and cost.',a:()=>UL(P('Chunking:','Splitting documents into retrieval units makes indexing and context assembly manageable; chunks that are too small lose context, while chunks that are too large dilute relevance.',2),P('Overlap:','Repeating a boundary region in adjacent chunks reduces the chance that a key sentence is split across chunks, but increases storage and duplicate retrieval.',2),P('Design choice:','Semantic boundaries, metadata and evaluation queries should guide chunk size; there is no universal best value.',2))},
+{s:'rag',n:4,m:5,src:'Glossary application',q:'Why might a RAG system use hybrid search and a reranker instead of vector similarity alone?',a:()=>UL(P('Hybrid search:','Combines lexical matching, which is strong for exact identifiers and rare terms, with vector similarity, which is strong for paraphrases and meaning.',2),P('Reranker:','A second model scores query-document pairs more deeply and reorders candidates, improving precision before the expensive generation step.',2),P('Cost:','Both add latency and compute, so they should be justified with retrieval evaluation such as Recall@k and grounded answer quality.',1))},
+{s:'rag',n:5,m:5,src:'Glossary application',q:'Explain prompt injection in a RAG application and give two controls that reduce its impact.',a:()=>UL(P('Threat:','Malicious instructions can be hidden in user input or retrieved documents and attempt to override the system’s task or make an agent disclose data or call tools.',2),P('Separate data from instructions:','Clearly delimit retrieved content, tell the model it is evidence rather than authority, and validate structured outputs.',1),P('Constrain execution:','Use least-privilege tool permissions, access control, sandboxing, allow-lists and human approval for consequential actions.',2))},
+{s:'agent',n:1,m:7,src:'Glossary application',q:'Use the agent loop to explain how an AI agent completes a multi-step task.',a:()=>OL(P('Interpret the goal:','Read the request, constraints and current state.',1),P('Plan/select an action:','Choose a tool or next step from the permitted action space.',1),P('Execute:','Call the tool through a validated schema and permissions boundary.',1),P('Observe:','Read the result, errors and environment changes.',1),P('Update and continue:','Update agent state, decide whether to retry, delegate or finish, and stop when a success criterion is met.',3))},
+{s:'agent',n:2,m:6,src:'Glossary application',q:'Differentiate tool calling, tool execution and a tool schema. Why must the model request not be treated as proof that an action occurred?',a:()=>DL(TERM('Tool calling',2,'The model produces a structured request for an external operation.'),TERM('Tool schema',2,'The defined purpose, arguments, types and output contract that constrain and describe the tool.'),TERM('Tool execution',2,'The software actually validates, authorises and runs the requested operation, records the result and handles failure. A model message is only an intent/request; execution must be confirmed by the host system.'))},
+{s:'agent',n:3,m:6,src:'Glossary application',q:'Design guardrails for an agent that can search files and send email. Include access, safety and observability controls.',a:()=>UL(P('Access:','Apply least privilege, scoped credentials and allow-listed paths/recipients; do not expose secrets through prompts or logs.',2),P('Safety:','Validate tool arguments, sandbox file/code operations, detect prompt injection and require human approval before sending external email.',2),P('Observability:','Keep trace and audit logs of prompts, tool calls, results, approvals and errors, with sensitive data redaction.',2))},
+{s:'agent',n:4,m:5,src:'Glossary application',q:'Contrast short-term memory, working memory and durable agent state in a long-running workflow.',a:()=>UL(P('Short-term memory:','Recent conversation or task information held in the active context window.',1),P('Working memory:','Intermediate notes, observations and partial results needed during the current task.',2),P('Agent state:','Structured progress, pending actions and checkpoints that let a workflow resume after interruption; it should be serialisable and versioned.',2))},
+{s:'mcq',n:1,m:2,src:'Honours MCQ',q:'A model has 64 experts but the router activates two experts per token. Which statement is most accurate?',a:()=>MCQ(['Every token uses all 64 experts, so compute is dense.','The model has sparse activation per token, but total stored capacity includes all experts.','Only two experts exist at inference time.','The router removes the need for load balancing.'],'B','MoE decouples total parameter capacity from active parameters per token; routing and expert utilisation still create systems concerns.')},
+{s:'mcq',n:2,m:2,src:'Honours MCQ',q:'A 70B GGUF model fits in RAM but runs at 3 tok/s after most layers are placed on the CPU. What is the strongest diagnosis?',a:()=>MCQ(['The workload is necessarily compute-bound on the GPU.','CPU offloading likely introduced transfer and bandwidth bottlenecks.','The tokenizer has increased the model’s parameter count.','The KV-cache has been eliminated.'],'B','Moving weights or operations across CPU/RAM and GPU/VRAM paths can make autoregressive decoding bandwidth- and transfer-bound.')},
+{s:'mcq',n:3,m:2,src:'Honours MCQ',q:'Which change most directly reduces KV-cache memory for a fixed prompt and model architecture?',a:()=>MCQ(['Increase temperature.','Use a longer context window.','Use a lower-precision KV-cache.','Increase top-k.'],'C','Quantizing cached keys and values reduces their bytes per element, with a possible quality/stability trade-off.')},
+{s:'mcq',n:4,m:2,src:'Honours MCQ',q:'Why can speculative decoding improve tok/s without intentionally changing the target model?',a:()=>MCQ(['It replaces the target model with the draft model.','It predicts candidate tokens with a draft model and verifies them in parallel with the target.','It removes the need for tokenisation.','It makes sampling deterministic.'],'B','Accepted draft tokens allow the expensive target model to advance several positions per verification pass.')},
+{s:'mcq',n:5,m:2,src:'Honours MCQ',q:'Which evaluation result best tests whether a RAG system is retrieving useful evidence rather than merely producing fluent answers?',a:()=>MCQ(['Only response length.','Recall@k together with groundedness or citation correctness.','GPU temperature alone.','The number of system-prompt tokens.'],'B','Retrieval recall checks whether relevant evidence appears in candidates, while groundedness checks whether the answer is supported by that evidence.')},
+{s:'mcq',n:6,m:2,src:'Honours MCQ',q:'An agent receives a tool-call JSON object but the database shows no corresponding write. What conclusion is justified?',a:()=>MCQ(['The write definitely happened.','The model is guaranteed to be aligned.','The object represents a request; execution and its result must be verified independently.','The prompt should be retried indefinitely.'],'C','Tool calling is a model interaction pattern; tool execution is a separate, auditable software action.')},
+{s:'mcq',n:7,m:2,src:'Honours MCQ',q:'Which pairing is conceptually correct?',a:()=>MCQ(['Embedding model: generates the final answer; vector DB: fine-tunes the LLM.','Reranker: reorders retrieved candidates; generator: writes the response from assembled context.','Tokenizer: stores vectors; KV-cache: stores documents permanently.','Guardrail: increases temperature; sampling: authorises tools.'],'B','A reranker improves candidate ordering and the generative model produces the final response conditioned on context.')},
+{s:'mcq',n:8,m:2,src:'Honours MCQ',q:'Which control most directly limits the blast radius of a prompt-injected request to delete files?',a:()=>MCQ(['Increase context length.','Grant the agent broad administrator privileges.','Use least-privilege access, path allow-lists and human approval for destructive actions.','Increase temperature to expose the attack.'],'C','Defence in depth constrains what the agent can reach and requires a human decision for high-impact operations.')}
+];
+Object.keys(SECTORS).forEach(k=>delete SECTORS[k]);
+Object.assign(SECTORS,{inf:{code:'Sector A',name:'Inference Systems',long:'MoE, quantization & performance'},rag:{code:'Sector B',name:'RAG & Retrieval',long:'Embeddings, search & groundedness'},agent:{code:'Sector C',name:'Agents',long:'Loops, tools & safety'},mcq:{code:'Sector D',name:'Honours MCQ',long:'Medium-to-hard application questions'}});
+DATA.splice(0,DATA.length,...LOCAL_DATA);
+DATA.forEach(d=>{d.id=d.s+'-'+d.n;d.html=d.a();d.text=(d.q+' '+(d.af||'')+' '+(d.sub||'')+' '+d.html.replace(/<[^>]+>/g,' ')).toLowerCase()});
+
+/* ---------- state ---------- */
+const store={get(k,f){try{const v=localStorage.getItem('wcodex:'+k);return v==null?f:JSON.parse(v)}catch(e){return f}},set(k,v){try{localStorage.setItem('wcodex:'+k,JSON.stringify(v))}catch(e){}}};
+const S={sector:store.get('sector','all'),mode:'study',learned:new Set(store.get('learned',[])),open:new Set(),revealAll:false,hideLearned:false,query:'',
+  order:[],idx:0,flipped:false,unlearnedOnly:false};
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,'0');
+const inSector=d=>S.sector==='all'||d.s===S.sector;
+function saveLearned(){store.set('learned',[...S.learned])}
+
+/* ---------- stats + sectors ---------- */
+function marksOf(list){return list.reduce((a,d)=>a+d.m,0)}
+function learnedMarks(list){return list.reduce((a,d)=>a+(S.learned.has(d.id)?d.m:0),0)}
+function renderStats(){
+  $('s-q').textContent=DATA.length;
+  $('s-m').textContent=marksOf(DATA);
+  $('s-l').textContent=Math.round(100*learnedMarks(DATA)/marksOf(DATA))+'%';
+}
+function renderSectors(){
+  const opts=[['all',{code:'All sectors',name:'Full Codex'}],...Object.entries(SECTORS)];
+  $('sectors').innerHTML=opts.map(([k,v])=>{
+    const list=k==='all'?DATA:DATA.filter(d=>d.s===k);
+    const pct=Math.round(100*learnedMarks(list)/marksOf(list));
+    return `<button class="sector" data-s="${k}" aria-pressed="${S.sector===k}">
+      <span class="code">${v.code}</span><span class="name">${v.name}</span>
+      <span class="meta">${list.length} Q · ${marksOf(list)} marks · ${pct}% learned</span>
+      <span class="meter"><i style="width:${pct}%"></i></span></button>`}).join('');
+  renderRail();
+}
+$('sectors').addEventListener('click',e=>{
+  const b=e.target.closest('.sector');if(!b)return;
+  S.sector=b.dataset.s;store.set('sector',S.sector);
+  renderSectors();renderList();buildDeck(true);
+});
+
+/* ---------- study list ---------- */
+function qHead(d){
+  return `<span class="qtag">${d.s==='olap'?'OLAP':d.s==='bd'?'BIG DATA':'FRONT ROOM'} · Q${pad(d.n)}</span>
+  <span class="chip marks">${d.m} marks</span><span class="chip">${d.src}</span>${S.learned.has(d.id)?'<span class="chip learned">● Learned</span>':''}`;
+}
+function renderList(){
+  const list=DATA.filter(d=>inSector(d)&&(!S.query||d.text.includes(S.query))&&(!S.hideLearned||!S.learned.has(d.id)));
+  if(!list.length){$('list').innerHTML=`<div class="empty hud">No questions match. Clear the search or show learned questions.</div>`;return}
+  let html='',cur='';
+  list.forEach(d=>{
+    if(d.s!==cur){cur=d.s;const sec=SECTORS[cur];const sl=DATA.filter(x=>x.s===cur);
+      if(cur!==list[0].s||true)html+=(html?'</div>':'')+`<div class="group-h"><h2>${sec.name}</h2><span>${sec.long} · ${marksOf(sl)} marks</span></div><div class="list">`}
+    const open=S.revealAll||S.open.has(d.id);
+    html+=`<article id="q-${d.id}" class="q hud${open?' open':''}${S.learned.has(d.id)?' is-learned':''}" data-id="${d.id}">
+      <div class="qhead">${qHead(d)}</div>
+      <h3 class="qtitle">${d.q}</h3>
+      ${d.af?`<p class="af">${d.af}</p>`:''}${d.sub?`<p class="sub">${d.sub}</p>`:''}
+      <div class="qactions">
+        <button class="btn" data-act="toggle" aria-expanded="${open}">${open?'Hide answer':'Reveal answer'}</button>
+        <button class="btn good" data-act="learn" aria-pressed="${S.learned.has(d.id)}">${S.learned.has(d.id)?'Learned ✓':'Mark learned'}</button>
+      </div>
+      <div class="ans"><div><div class="ansin answer">${d.html}</div></div></div>
+    </article>`;
+  });
+  $('list').innerHTML=html+'</div>';
+}
+$('list').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-act]');if(!b)return;
+  const card=b.closest('.q'),id=card.dataset.id;
+  if(b.dataset.act==='toggle'){
+    const open=!card.classList.contains('open');
+    card.classList.toggle('open',open);open?S.open.add(id):S.open.delete(id);
+    b.textContent=open?'Hide answer':'Reveal answer';b.setAttribute('aria-expanded',open);
+  }else{
+    toggleLearned(id);
+    if(S.hideLearned)renderList();
+    else{card.classList.toggle('is-learned',S.learned.has(id));b.setAttribute('aria-pressed',S.learned.has(id));b.textContent=S.learned.has(id)?'Learned ✓':'Mark learned';card.querySelector('.qhead').innerHTML=qHead(DATA.find(d=>d.id===id))}
+  }
+});
+function toggleLearned(id,force){
+  const on=force===undefined?!S.learned.has(id):force;
+  on?S.learned.add(id):S.learned.delete(id);saveLearned();renderStats();renderSectors();
+}
+$('q-search').addEventListener('input',e=>{S.query=e.target.value.trim().toLowerCase();renderList()});
+$('reveal-all').addEventListener('click',e=>{S.revealAll=!S.revealAll;if(!S.revealAll)S.open.clear();e.currentTarget.setAttribute('aria-pressed',S.revealAll);e.currentTarget.textContent=S.revealAll?'Hide all':'Reveal all';renderList()});
+$('hide-learned').addEventListener('click',e=>{S.hideLearned=!S.hideLearned;e.currentTarget.setAttribute('aria-pressed',S.hideLearned);renderList()});
+
+/* ---------- flashcards ---------- */
+function buildDeck(reset){
+  const keep=S.order[S.idx];
+  S.order=DATA.filter(d=>inSector(d)&&(!S.unlearnedOnly||!S.learned.has(d.id))).map(d=>d.id);
+  S.idx=reset?0:Math.max(0,S.order.indexOf(keep));
+  S.flipped=false;renderCard();
+}
+function renderCard(){
+  const card=$('card');card.classList.toggle('flipped',S.flipped);
+  if(!S.order.length){
+    $('front').innerHTML=`<div class="ftop"><span class="qtag">DECK CLEAR</span></div><p class="fq">Every question in this sector is marked learned.</p><div class="fhint">Turn off “Unlearned only” to review them again</div>`;
+    $('back').innerHTML='';$('counter').innerHTML=`00 <small>/ 00</small>`;$('trail').style.width='100%';return;
+  }
+  if(S.idx>=S.order.length)S.idx=0;
+  const d=DATA.find(x=>x.id===S.order[S.idx]);
+  $('front').innerHTML=`<div class="ftop">${qHead(d)}</div>
+    <div><p class="fq">${d.q}</p>${d.af?`<p class="af" style="font-size:1rem">${d.af}</p>`:''}${d.sub?`<p class="sub">${d.sub}</p>`:''}</div>
+    <div class="fhint">Recall your answer · then flip</div>`;
+  $('back').innerHTML=`<div class="ftop"><span class="qtag" style="color:var(--violet)">ANSWER · Q${pad(d.n)}</span><span class="chip marks">${d.m} marks</span></div>
+    <div class="fscroll answer">${d.html}</div>`;
+  $('counter').innerHTML=`${pad(S.idx+1)} <small>/ ${pad(S.order.length)}</small>`;
+  $('trail').style.width=(100*(S.idx+1)/S.order.length)+'%';
+  $('d-got').setAttribute('aria-pressed',S.learned.has(d.id));
+  railMark();
+}
+function flip(){if(!S.order.length)return;S.flipped=!S.flipped;$('card').classList.toggle('flipped',S.flipped);if(S.flipped){const f=$('back').querySelector('.fscroll');if(f)f.scrollTop=0}}
+function go(step){if(!S.order.length)return;S.idx=(S.idx+step+S.order.length)%S.order.length;S.flipped=false;$('card').classList.remove('flipped');setTimeout(renderCard,S.reduce?0:180)}
+function grade(ok){
+  if(!S.order.length)return;const id=S.order[S.idx];toggleLearned(id,ok);
+  if(S.unlearnedOnly&&ok){S.order.splice(S.idx,1);if(S.idx>=S.order.length)S.idx=0;S.flipped=false;$('card').classList.remove('flipped');setTimeout(renderCard,S.reduce?0:180)}
+  else go(1);
+}
+$('card').addEventListener('click',e=>{if(e.target.closest('a,button'))return;if(window.getSelection&&String(window.getSelection()).length)return;flip()});
+$('d-flip').onclick=flip;$('d-prev').onclick=()=>go(-1);$('d-next').onclick=()=>go(1);
+$('d-again').onclick=()=>grade(false);$('d-got').onclick=()=>grade(true);
+$('d-shuffle').onclick=()=>{for(let i=S.order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[S.order[i],S.order[j]]=[S.order[j],S.order[i]]}S.idx=0;S.flipped=false;renderCard()};
+$('d-unlearned').onclick=e=>{S.unlearnedOnly=!S.unlearnedOnly;e.currentTarget.setAttribute('aria-pressed',S.unlearnedOnly);buildDeck(true)};
+document.addEventListener('keydown',e=>{
+  if(S.mode!=='flash'||e.target.matches('input,textarea')||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}
+  else if(e.key==='ArrowRight'){e.preventDefault();go(1)}
+  else if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}
+  else if(e.key==='1')grade(false);
+  else if(e.key==='2')grade(true);
+});
+
+/* ---------- modes ---------- */
+function setMode(m,push){
+  S.mode=m;$('study').hidden=m!=='study';$('flash').hidden=m!=='flash';
+  $('m-study').setAttribute('aria-pressed',m==='study');$('m-flash').setAttribute('aria-pressed',m==='flash');
+  if(m==='flash'){buildDeck(false)}else renderList();
+  if(push){try{history.replaceState(null,'','#'+(m==='flash'?'flashcards':'study'))}catch(e){location.hash=m==='flash'?'flashcards':'study'}}
+  railMark();
+}
+$('m-study').onclick=()=>setMode('study',true);
+$('m-flash').onclick=()=>{setMode('flash',true);$('sectors').scrollIntoView({block:'start'})};
+window.addEventListener('hashchange',()=>setMode(location.hash==='#flashcards'?'flash':'study'));
+
+
+/* =================================================================
+   SKIN ENGINE — one animation loop, per-skin background + hero
+   ================================================================= */
+S.reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TAU=Math.PI*2, rnd=Math.random;
+const bg=$('bg2d'), bx=bg.getContext('2d');
+const hero=$('hero'), hx=hero.getContext('2d');
+let DPR=Math.min(2,window.devicePixelRatio||1), BW=1, BH=1, HW=1, HH=1;
+const PTR={x:-9999,y:-9999,on:false};
+let heroVisible=true, curSkin='hud';
+
+function glowSprite(rgb){
+  const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');
+  const g=x.createRadialGradient(32,32,0,32,32,32);
+  g.addColorStop(0,`rgba(${rgb},1)`);g.addColorStop(.22,`rgba(${rgb},.5)`);g.addColorStop(.55,`rgba(${rgb},.12)`);g.addColorStop(1,`rgba(${rgb},0)`);
+  x.fillStyle=g;x.fillRect(0,0,64,64);return c;
+}
+const GLOW={
+  cyan:glowSprite('98,240,255'), violet:glowSprite('169,139,255'), amber:glowSprite('255,203,116'),
+  gold:glowSprite('255,214,150'), white:glowSprite('255,248,235'), ice:glowSprite('170,210,255'), rose:glowSprite('234,148,194'),
+  teal:glowSprite('79,240,216'), pink:glowSprite('255,111,208'), lure:glowSprite('255,226,122')
+};
+function sprite(ctx,img,x,y,size,alpha){ctx.globalAlpha=alpha;ctx.drawImage(img,x-size/2,y-size/2,size,size);ctx.globalAlpha=1}
+function spikes(ctx,x,y,L,a,rgb){
+  ctx.save();ctx.translate(x,y);ctx.globalCompositeOperation='lighter';ctx.lineWidth=Math.max(1,DPR*.8);
+  const arms=[[Math.PI/2,1],[Math.PI/2+Math.PI/3,1],[Math.PI/2+2*Math.PI/3,1],[0,.42]];
+  for(const [ang,k] of arms){for(const s of [1,-1]){
+    const ex=Math.cos(ang)*L*k*s, ey=Math.sin(ang)*L*k*s;
+    const g=ctx.createLinearGradient(0,0,ex,ey);g.addColorStop(0,`rgba(${rgb},${a})`);g.addColorStop(1,`rgba(${rgb},0)`);
+    ctx.strokeStyle=g;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(ex,ey);ctx.stroke();
+  }}
+  ctx.restore();
+}
+
+/* ---------------- HUD: drifting starfield + OLAP cube ---------------- */
+const HUD={
+  bgInit(){this.ss=null;const n=Math.round(innerWidth*innerHeight/5200);this.stars=Array.from({length:n},()=>({x:rnd()*BW,y:rnd()*BH,z:rnd(),t:rnd()*TAU}))},
+  bg(t,dt){
+    bx.clearRect(0,0,BW,BH);
+    for(const s of this.stars){
+      const tw=.55+.45*Math.sin(s.t+t*.0012*(.4+s.z)), r=(.35+s.z*1.25)*DPR;
+      bx.fillStyle=s.z>.93?`rgba(169,139,255,${.8*tw})`:s.z>.86?`rgba(98,240,255,${.75*tw})`:`rgba(220,230,255,${(.25+.6*s.z)*tw})`;
+      bx.beginPath();bx.arc(s.x,s.y,r,0,TAU);bx.fill();
+      if(!S.reduce){s.y+=(.04+s.z*.18)*DPR*dt/16;if(s.y>BH){s.y=0;s.x=rnd()*BW}}
+    }
+  },
+  hot:[[0,2,0],[1,1,1],[2,0,2],[2,2,1],[0,1,2]],
+  hero(t){
+    const N=3, a=t*.00022+.6, b=-.5+Math.sin(t*.00017)*.12, sc=Math.min(HW,HH)*.2;
+    const proj=p=>{let [X,Y,Z]=p.map(v=>v-N/2);const x1=X*Math.cos(a)-Z*Math.sin(a),z1=X*Math.sin(a)+Z*Math.cos(a);const y1=Y*Math.cos(b)-z1*Math.sin(b),z2=Y*Math.sin(b)+z1*Math.cos(b);const f=6/(6+z2);return [HW/2+x1*sc*f,HH/2+y1*sc*f,z2]};
+    hx.clearRect(0,0,HW,HH);hx.lineWidth=DPR;
+    const line=(p,q,al)=>{const A=proj(p),B=proj(q),d=(A[2]+B[2])/2;hx.strokeStyle=`rgba(98,240,255,${al*(.55-d*.16)})`;hx.beginPath();hx.moveTo(A[0],A[1]);hx.lineTo(B[0],B[1]);hx.stroke()};
+    for(let i=0;i<=N;i++)for(let j=0;j<=N;j++){const e=(i===0||i===N)&&(j===0||j===N),al=e?1.6:.55;line([0,i,j],[N,i,j],al);line([i,0,j],[i,N,j],al);line([i,j,0],[i,j,N],al)}
+    for(let i=0;i<N;i++)for(let j=0;j<N;j++)for(let k=0;k<N;k++){
+      const P=proj([i+.5,j+.5,k+.5]);const hot=this.hot.some(h=>h[0]===i&&h[1]===j&&h[2]===k);
+      if(hot){const pulse=.6+.4*Math.sin(t*.003+i+j*2+k*3);sprite(hx,(i+j+k)%2?GLOW.amber:GLOW.violet,P[0],P[1],40*DPR,.9*pulse);hx.fillStyle=`rgba(255,255,255,${pulse})`;hx.beginPath();hx.arc(P[0],P[1],2.2*DPR,0,TAU);hx.fill()}
+      else{hx.fillStyle='rgba(200,215,255,.35)';hx.beginPath();hx.arc(P[0],P[1],1.2*DPR,0,TAU);hx.fill()}
+    }
+  },
+  caption:'Inference graph · active pathways'
+};
+
+/* ---------------- NEBULA: WebGL clouds + spiked stars + star-schema constellation ---------------- */
+const GL=(function(){
+  const c=$('bggl');let gl=null,prog,uR,uT,uS,ok=false,scale=.5;
+  const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  const fs=`precision mediump float;uniform vec2 r;uniform float t;uniform float s;
+  float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}
+  float fbm(vec2 p){float v=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<6;i++){v+=a*n(p);p=m*p;a*=.5;}return v;}
+  void main(){
+    vec2 uv=(gl_FragCoord.xy-.5*r)/r.y;uv.y+=s;
+    float tt=t*.018;
+    vec2 q=vec2(fbm(uv*1.3+tt),fbm(uv*1.3+vec2(5.2,1.3)-tt));
+    vec2 w=vec2(fbm(uv*1.7+2.*q+vec2(1.7,9.2)+tt*.7),fbm(uv*1.7+2.*q+vec2(8.3,2.8)-tt*.4));
+    float f=fbm(uv*1.5+2.4*w);
+    vec3 col=vec3(.014,.009,.038);
+    col=mix(col,vec3(.19,.07,.34),smoothstep(.3,.8,f));
+    col=mix(col,vec3(.62,.16,.42),smoothstep(.55,1.,f*(.6+w.x))*.8);
+    col=mix(col,vec3(.06,.34,.46),smoothstep(.45,.9,q.y)*smoothstep(.35,.7,f)*.55);
+    col+=vec3(1.,.74,.42)*pow(clamp(f*w.y*1.45,0.,1.),4.)*.95;
+    col*=mix(.32,1.,smoothstep(.22,.56,fbm(uv*3.1+w*1.5-tt)));
+    col*=.18+.82*smoothstep(1.55,.2,length(uv*vec2(.85,1.)-vec2(.38,.22)));
+    gl_FragColor=vec4(col*.92,1.);
+  }`;
+  function sh(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s}
+  function init(){
+    if(ok||gl===false)return ok;
+    try{
+      gl=c.getContext('webgl',{antialias:false,preserveDrawingBuffer:true,alpha:false});
+      if(!gl)throw 0;
+      prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,vs));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(prog);
+      if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw 0;
+      gl.useProgram(prog);
+      const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+      const loc=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+      uR=gl.getUniformLocation(prog,'r');uT=gl.getUniformLocation(prog,'t');uS=gl.getUniformLocation(prog,'s');
+      ok=true;resize();c.classList.add('ready');
+    }catch(e){gl=false;ok=false}
+    return ok;
+  }
+  function resize(){if(!ok)return;scale=innerWidth<700?.42:.5;c.width=Math.max(1,Math.round(innerWidth*scale));c.height=Math.max(1,Math.round(innerHeight*scale));gl.viewport(0,0,c.width,c.height)}
+  function frame(t){if(!ok)return;gl.uniform2f(uR,c.width,c.height);gl.uniform1f(uT,t/1000+40);gl.uniform1f(uS,-(window.scrollY||0)*.00018);gl.drawArrays(gl.TRIANGLES,0,3)}
+  return {init,resize,frame,get ok(){return ok}};
+})();
+
+const NEB={
+  bgInit(){
+    const n=Math.round(innerWidth*innerHeight/3400);
+    this.stars=Array.from({length:n},()=>{const z=rnd();const c=rnd();return {x:rnd()*BW,y:rnd()*BH,z,t:rnd()*TAU,
+      col:c<.55?'255,246,230':c<.8?'190,215,255':c<.93?'255,214,150':'240,170,210',bright:z>.988}});
+    this.shoot=null;this.next=performance.now()+3000+rnd()*4000;
+  },
+  bg(t,dt){
+    bx.clearRect(0,0,BW,BH);
+    for(const s of this.stars){
+      const tw=.55+.45*Math.sin(s.t+t*.0011*(.3+s.z));
+      const r=(.28+s.z*1.05)*DPR;
+      if(s.bright){
+        sprite(bx,s.col==='190,215,255'?GLOW.ice:GLOW.white,s.x,s.y,20*DPR,.55*tw);
+        spikes(bx,s.x,s.y,(14+10*s.z)*DPR*(.75+.25*tw),.55*tw,s.col);
+      }
+      bx.fillStyle=`rgba(${s.col},${(.22+.7*s.z)*tw})`;bx.beginPath();bx.arc(s.x,s.y,r,0,TAU);bx.fill();
+      if(!S.reduce){s.x+=(.015+s.z*.05)*DPR*dt/16;if(s.x>BW+4){s.x=-4;s.y=rnd()*BH}}
+    }
+    if(S.reduce)return;
+    if(!this.shoot&&t>this.next){const ang=Math.PI*(.12+rnd()*.12);this.shoot={x:rnd()*BW*.7,y:rnd()*BH*.35,vx:Math.cos(ang)*14*DPR,vy:Math.sin(ang)*14*DPR,life:1}}
+    const sh=this.shoot;
+    if(sh){
+      sh.x+=sh.vx*dt/16;sh.y+=sh.vy*dt/16;sh.life-=.018*dt/16;
+      const tx=sh.x-sh.vx*9,ty=sh.y-sh.vy*9;const g=bx.createLinearGradient(sh.x,sh.y,tx,ty);
+      g.addColorStop(0,`rgba(255,236,200,${.9*sh.life})`);g.addColorStop(1,'rgba(255,214,150,0)');
+      bx.strokeStyle=g;bx.lineWidth=1.4*DPR;bx.beginPath();bx.moveTo(sh.x,sh.y);bx.lineTo(tx,ty);bx.stroke();
+      sprite(bx,GLOW.gold,sh.x,sh.y,14*DPR,sh.life);
+      if(sh.life<=0){this.shoot=null;this.next=t+5000+rnd()*7000}
+    }
+  },
+  dims:['TOKEN','PROMPT','ROUTER','EXPERT','TOOL','CONTEXT'],
+  sats:Array.from({length:6},()=>Array.from({length:3},()=>[(rnd()-.5)*.26,(rnd()-.5)*.2,.5+rnd()*.5])),
+  dust:Array.from({length:70},()=>[rnd(),rnd(),rnd()]),
+  hero(t){
+    const W=HW,Hh=HH,cx=W/2,cy=Hh*.45,R=Math.min(W,Hh)*.38,rot=t*.00011;
+    hx.clearRect(0,0,W,Hh);
+    for(const d of this.dust){hx.fillStyle=`rgba(255,240,220,${.12+.3*d[2]*(.6+.4*Math.sin(t*.001+d[0]*20))})`;hx.beginPath();hx.arc(d[0]*W,d[1]*Hh,(.4+d[2]*.8)*DPR,0,TAU);hx.fill()}
+    hx.save();hx.setLineDash([2*DPR,7*DPR]);hx.lineWidth=DPR;
+    hx.strokeStyle='rgba(244,201,122,.2)';hx.beginPath();hx.ellipse(cx,cy,R,R*.48,0,0,TAU);hx.stroke();
+    hx.strokeStyle='rgba(234,148,194,.12)';hx.beginPath();hx.ellipse(cx,cy,R*.62,R*.3,0,0,TAU);hx.stroke();
+    hx.restore();
+    const nodes=this.dims.map((name,i)=>{const a=rot+i*TAU/6;const depth=(Math.sin(a)+1)/2;return {name,i,x:cx+Math.cos(a)*R,y:cy+Math.sin(a)*R*.48,depth,sc:.68+.5*depth}}).sort((p,q)=>p.depth-q.depth);
+    const drawNode=n=>{
+      const g=hx.createLinearGradient(cx,cy,n.x,n.y);g.addColorStop(0,`rgba(255,226,170,${.55*(.4+.6*n.depth)})`);g.addColorStop(1,`rgba(244,201,122,${.18+.4*n.depth})`);
+      hx.strokeStyle=g;hx.lineWidth=DPR*(.8+.6*n.depth);hx.beginPath();hx.moveTo(cx,cy);hx.lineTo(n.x,n.y);hx.stroke();
+      for(const s of this.sats[n.i]){const sx=n.x+s[0]*R*n.sc,sy=n.y+s[1]*R*n.sc;
+        hx.strokeStyle=`rgba(234,148,194,${.18+.22*n.depth})`;hx.lineWidth=DPR*.7;hx.beginPath();hx.moveTo(n.x,n.y);hx.lineTo(sx,sy);hx.stroke();
+        sprite(hx,GLOW.rose,sx,sy,10*DPR*n.sc,.6*s[2]);hx.fillStyle=`rgba(255,235,245,${.5+.4*n.depth})`;hx.beginPath();hx.arc(sx,sy,.9*DPR,0,TAU);hx.fill()}
+      const tw=.8+.2*Math.sin(t*.002+n.i*1.7);
+      sprite(hx,GLOW.gold,n.x,n.y,34*DPR*n.sc,.85*tw);
+      hx.fillStyle='#fff7e6';hx.beginPath();hx.arc(n.x,n.y,1.9*DPR*n.sc,0,TAU);hx.fill();
+      hx.font=`500 ${Math.round(9.5*DPR*(.85+.25*n.depth))}px "IBM Plex Mono",monospace`;hx.textAlign='center';
+      hx.fillStyle=`rgba(246,239,226,${.35+.6*n.depth})`;hx.fillText(n.name.split('').join(String.fromCharCode(8202)),n.x,n.y+20*DPR*n.sc);
+    };
+    nodes.filter(n=>n.depth<.5).forEach(drawNode);
+    const pulse=.85+.15*Math.sin(t*.0016);
+    sprite(hx,GLOW.gold,cx,cy,150*DPR*pulse,.55);
+    sprite(hx,GLOW.white,cx,cy,60*DPR,.9);
+    spikes(hx,cx,cy,72*DPR*pulse,.75,'255,236,200');
+    hx.fillStyle='#fffaf0';hx.beginPath();hx.arc(cx,cy,3.2*DPR,0,TAU);hx.fill();
+    hx.font=`600 ${Math.round(17*DPR)}px "Cormorant Garamond",Georgia,serif`;hx.textAlign='center';hx.fillStyle='rgba(255,246,228,.95)';
+    hx.fillText('AI · SYSTEMS',cx,cy-26*DPR);
+    nodes.filter(n=>n.depth>=.5).forEach(drawNode);
+  },
+  caption:'Knowledge graph · connected evidence'
+};
+
+/* ---------------- ABYSS: deep water, plankton, jellyfish + sonar ---------------- */
+const ABY={
+  bgInit(){
+    const area=innerWidth*innerHeight;this.bub=null;
+    this.snow=Array.from({length:Math.round(area/9000)},()=>({x:rnd()*BW,y:rnd()*BH,r:(.4+rnd()*1.1)*DPR,v:.08+rnd()*.3,ph:rnd()*TAU,a:.12+rnd()*.3}));
+    this.plk=Array.from({length:Math.round(area/22000)+20},()=>({x:rnd()*BW,y:rnd()*BH,vx:(rnd()-.5)*.25,vy:(rnd()-.5)*.25,r:(1+rnd()*1.6)*DPR,pink:rnd()<.25,lure:rnd()<.06,ph:rnd()*TAU,e:0}));
+    const jn=innerWidth<700?2:4;
+    this.jelly=Array.from({length:jn},(_,i)=>({x:(i+.5)/jn*BW+(rnd()-.5)*BW*.15,y:BH*(.3+rnd()*.8),s:(26+rnd()*34)*DPR,sp:.7+rnd()*.5,ph:rnd()*TAU,a:.5+rnd()*.4,hue:rnd()<.5}));
+    this.rays=Array.from({length:5},(_,i)=>({x:.1+i*.2+(rnd()-.5)*.1,w:.05+rnd()*.08,ang:(rnd()-.5)*.35,ph:rnd()*TAU}));
+  },
+  bg(t,dt){
+    const k=dt/16;
+    const base=bx.createLinearGradient(0,0,0,BH);
+    base.addColorStop(0,'#06343f');base.addColorStop(.35,'#03171f');base.addColorStop(1,'#010407');
+    bx.globalCompositeOperation='source-over';bx.fillStyle=base;bx.fillRect(0,0,BW,BH);
+    bx.globalCompositeOperation='lighter';
+    for(const r of this.rays){
+      const sway=Math.sin(t*.00016+r.ph)*.06, a=r.ang+sway;
+      const x0=r.x*BW, w0=r.w*BW, L=BH*.85, dx=Math.tan(a)*L, w1=w0*2.4;
+      const g=bx.createLinearGradient(0,0,0,L);g.addColorStop(0,`rgba(150,255,240,${.07+.03*Math.sin(t*.0007+r.ph)})`);g.addColorStop(1,'rgba(150,255,240,0)');
+      bx.fillStyle=g;bx.beginPath();bx.moveTo(x0-w0/2,0);bx.lineTo(x0+w0/2,0);bx.lineTo(x0+dx+w1/2,L);bx.lineTo(x0+dx-w1/2,L);bx.closePath();bx.fill();
+    }
+    for(const s of this.snow){
+      if(!S.reduce){s.y+=s.v*DPR*k;s.x+=Math.sin(t*.0006+s.ph)*.15*DPR*k;if(s.y>BH+4){s.y=-4;s.x=rnd()*BW}}
+      bx.fillStyle=`rgba(210,245,240,${s.a})`;bx.beginPath();bx.arc(s.x,s.y,s.r,0,TAU);bx.fill();
+    }
+    for(const j of this.jelly)this.drawJelly(j,t,k);
+    const reach=150*DPR;
+    for(const p of this.plk){
+      if(!S.reduce){
+        p.vx+=(rnd()-.5)*.02;p.vy+=(rnd()-.5)*.02;p.vx*=.99;p.vy*=.99;
+        p.x+=p.vx*DPR*k;p.y+=(p.vy-.05)*DPR*k;
+        if(p.x<-10)p.x=BW+10;if(p.x>BW+10)p.x=-10;if(p.y<-10)p.y=BH+10;if(p.y>BH+10)p.y=-10;
+        if(PTR.on){const dx=p.x-PTR.x,dy=p.y-PTR.y,d=Math.hypot(dx,dy);if(d<reach){p.e=Math.min(1,p.e+.09*k);p.vx+=dx/d*.04;p.vy+=dy/d*.04}}
+        p.e*=Math.pow(.975,k);
+      }
+      const pulse=.5+.5*Math.sin(t*.0018+p.ph);
+      const a=.18+.32*pulse+.7*p.e;
+      sprite(bx,p.lure?GLOW.lure:p.pink?GLOW.pink:GLOW.teal,p.x,p.y,p.r*(9+14*p.e),a);
+      bx.fillStyle=`rgba(230,255,250,${.4+.6*p.e})`;bx.beginPath();bx.arc(p.x,p.y,p.r*.5,0,TAU);bx.fill();
+    }
+    bx.globalCompositeOperation='source-over';
+  },
+  drawJelly(j,t,k){
+    const pulse=Math.sin(t*.0016*j.sp+j.ph);
+    const contract=Math.max(0,pulse);
+    if(!S.reduce){j.y-=(.12+contract*.55)*DPR*k*(j.s/(40*DPR));j.x+=Math.sin(t*.0003+j.ph)*.12*DPR*k;if(j.y<-j.s*5){j.y=BH+j.s*1.5;j.x=rnd()*BW}}
+    const w=j.s*(1-.14*pulse), h=j.s*.85*(1+.12*pulse);
+    const rgb=j.hue?'255,111,208':'169,139,255';
+    bx.save();bx.translate(j.x,j.y);bx.rotate(Math.sin(t*.0004+j.ph)*.12);
+    sprite(bx,j.hue?GLOW.pink:GLOW.violet,0,-h*.3,w*4.2,.22*j.a);
+    bx.lineWidth=DPR*.9;
+    for(let i=0;i<9;i++){
+      const x0=-w*.85+i*(1.7*w/8),L=j.s*(2.1+((i*7)%3)*.45);
+      bx.strokeStyle=`rgba(${rgb},${.22*j.a})`;bx.beginPath();bx.moveTo(x0,0);
+      for(let sgm=1;sgm<=14;sgm++){const f=sgm/14;bx.lineTo(x0*(1-.35*f)+Math.sin(sgm*.55-t*.0028*j.sp+i)*j.s*.14*f,L*f)}
+      bx.stroke();
+    }
+    bx.lineWidth=DPR*2.2;
+    for(const s of [-1,1]){bx.strokeStyle=`rgba(255,200,240,${.2*j.a})`;bx.beginPath();bx.moveTo(s*w*.15,0);
+      for(let sgm=1;sgm<=12;sgm++){const f=sgm/12;bx.lineTo(s*w*.15+Math.sin(sgm*.7-t*.002+s)*j.s*.18*f,j.s*1.5*f)}bx.stroke()}
+    const g=bx.createRadialGradient(0,-h*.7,0,0,-h*.4,w*1.2);
+    g.addColorStop(0,`rgba(255,235,250,${.5*j.a})`);g.addColorStop(.5,`rgba(${rgb},${.28*j.a})`);g.addColorStop(1,`rgba(${rgb},${.05*j.a})`);
+    bx.fillStyle=g;bx.strokeStyle=`rgba(255,210,245,${.55*j.a})`;bx.lineWidth=DPR;
+    bx.beginPath();bx.moveTo(-w,0);bx.bezierCurveTo(-w,-h*1.35,w,-h*1.35,w,0);
+    for(let i=0;i<6;i++){const x1=w-(i+1)*(2*w/6);bx.quadraticCurveTo(x1+w/6,h*.14,x1,0)}
+    bx.closePath();bx.fill();bx.stroke();
+    sprite(bx,GLOW.white,0,-h*.55,w*.9,.35*j.a);
+    bx.restore();
+  },
+  blips:[{a:.55,r:.34,l:'PROMPT'},{a:1.75,r:.66,l:'RETRIEVE'},{a:2.85,r:.45,l:'REASON'},{a:4.05,r:.74,l:'TOOL CALL'},{a:5.2,r:.54,l:'RESPONSE',pink:true}],
+  hero(t){
+    const W=HW,Hh=HH,cx=W/2,cy=Hh*.45,R=Math.min(W,Hh)*.36;
+    hx.clearRect(0,0,W,Hh);
+    const disc=hx.createRadialGradient(cx,cy,0,cx,cy,R);disc.addColorStop(0,'rgba(10,70,72,.55)');disc.addColorStop(.85,'rgba(3,26,30,.75)');disc.addColorStop(1,'rgba(2,16,20,.9)');
+    hx.fillStyle=disc;hx.beginPath();hx.arc(cx,cy,R,0,TAU);hx.fill();
+    hx.lineWidth=DPR;
+    for(let i=1;i<=4;i++){hx.strokeStyle=`rgba(79,240,216,${i===4?.45:.16})`;hx.beginPath();hx.arc(cx,cy,R*i/4,0,TAU);hx.stroke()}
+    hx.strokeStyle='rgba(79,240,216,.12)';hx.beginPath();hx.moveTo(cx-R,cy);hx.lineTo(cx+R,cy);hx.moveTo(cx,cy-R);hx.lineTo(cx,cy+R);hx.stroke();
+    for(let d=0;d<360;d+=5){const a=d*Math.PI/180,L=(d%30===0?9:4)*DPR;hx.strokeStyle=`rgba(79,240,216,${d%30===0?.6:.3})`;hx.beginPath();hx.moveTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);hx.lineTo(cx+Math.cos(a)*(R+L),cy+Math.sin(a)*(R+L));hx.stroke()}
+    hx.font=`500 ${Math.round(9*DPR)}px "Azeret Mono",monospace`;hx.fillStyle='rgba(146,189,187,.7)';hx.textAlign='center';hx.textBaseline='middle';
+    [['000',-Math.PI/2],['090',0],['180',Math.PI/2],['270',Math.PI]].forEach(([s,a])=>hx.fillText(s,cx+Math.cos(a)*(R+22*DPR),cy+Math.sin(a)*(R+18*DPR)));
+    const sw=(t*.0009)%TAU, trail=1.3;
+    hx.save();hx.beginPath();hx.arc(cx,cy,R,0,TAU);hx.clip();
+    if(hx.createConicGradient){
+      const cg=hx.createConicGradient(sw-trail,cx,cy);const e=trail/TAU;
+      cg.addColorStop(0,'rgba(79,240,216,0)');cg.addColorStop(e*.999,'rgba(79,240,216,.32)');cg.addColorStop(e,'rgba(79,240,216,0)');cg.addColorStop(1,'rgba(79,240,216,0)');
+      hx.fillStyle=cg;hx.fillRect(cx-R,cy-R,2*R,2*R);
+    }else{for(let i=0;i<30;i++){const a0=sw-trail+trail*i/30;hx.fillStyle=`rgba(79,240,216,${.32*i/30})`;hx.beginPath();hx.moveTo(cx,cy);hx.arc(cx,cy,R,a0,a0+trail/30+.01);hx.closePath();hx.fill()}}
+    hx.restore();
+    hx.strokeStyle='rgba(190,255,245,.9)';hx.lineWidth=1.5*DPR;hx.beginPath();hx.moveTo(cx,cy);hx.lineTo(cx+Math.cos(sw)*R,cy+Math.sin(sw)*R);hx.stroke();
+    hx.textAlign='left';
+    for(const b of this.blips){
+      const since=((sw-b.a)%TAU+TAU)%TAU, I=Math.exp(-since*1.25);
+      const x=cx+Math.cos(b.a)*R*b.r,y=cy+Math.sin(b.a)*R*b.r;
+      sprite(hx,b.pink?GLOW.pink:GLOW.teal,x,y,(14+34*I)*DPR,.3+.7*I);
+      hx.fillStyle=`rgba(235,255,252,${.35+.65*I})`;hx.beginPath();hx.arc(x,y,2*DPR,0,TAU);hx.fill();
+      hx.fillStyle=b.pink?`rgba(255,160,225,${.3+.7*I})`:`rgba(170,250,238,${.25+.75*I})`;
+      hx.fillText(b.l,x+8*DPR,y-9*DPR);
+    }
+    sprite(hx,GLOW.teal,cx,cy,22*DPR,.8);
+    hx.fillStyle='rgba(146,189,187,.85)';hx.textAlign='left';
+    hx.fillText('BRG '+String(Math.round(((sw*180/Math.PI)+90)%360)).padStart(3,'0')+'°',10*DPR,14*DPR);
+    hx.textAlign='right';hx.fillText('5 AGENT STAGES',W-10*DPR,14*DPR);
+  },
+  caption:'Agent loop · observe and act'
+};
+
+const SKINS={hud:HUD,nebula:NEB,abyss:ABY};
+const inited={};
+
+/* ---------------- loop + sizing ---------------- */
+function sizeAll(){
+  DPR=Math.min(2,window.devicePixelRatio||1);
+  BW=bg.width=Math.max(1,Math.round(innerWidth*DPR));BH=bg.height=Math.max(1,Math.round(innerHeight*DPR));
+  const r=hero.getBoundingClientRect();HW=hero.width=Math.max(1,Math.round(r.width*DPR));HH=hero.height=Math.max(1,Math.round(r.height*DPR));
+  for(const k in inited)inited[k]=false;
+  GL.resize();
+}
+function ensure(k){if(!inited[k]){SKINS[k].bgInit();inited[k]=true}}
+let last=performance.now();
+function render(t,dt){
+  const sk=SKINS[curSkin];ensure(curSkin);
+  if(curSkin==='nebula')GL.frame(t);
+  sk.bg(t,dt);
+  const sb=sideBox();if(sb&&sk.side)sk.side(t,dt,sb);
+  if(heroVisible)sk.hero(t);
+}
+function loop(t){const dt=Math.min(48,Math.max(1,t-last));last=t;render(t,dt);requestAnimationFrame(loop)}
+let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{sizeAll();if(S.reduce)render(4000,16)},120)});
+window.addEventListener('pointermove',e=>{PTR.x=e.clientX*DPR;PTR.y=e.clientY*DPR;PTR.on=true},{passive:true});
+window.addEventListener('pointerleave',()=>{PTR.on=false});
+document.addEventListener('pointerleave',()=>{PTR.on=false});
+if('IntersectionObserver' in window){new IntersectionObserver(es=>{heroVisible=es[0].isIntersecting},{rootMargin:'40px'}).observe(hero)}
+let rmRaf=0;if(S.reduce)window.addEventListener('scroll',()=>{if(rmRaf)return;rmRaf=requestAnimationFrame(()=>{rmRaf=0;render(4000,16)})},{passive:true});
+
+/* ---------------- skin switching ---------------- */
+function applySkin(k){
+  if(!SKINS[k])k='hud';
+  curSkin=k;document.documentElement.dataset.skin=k;store.set('skin',k);
+  document.querySelectorAll('.skins button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.skin===k));
+  $('hero-cap').textContent=SKINS[k].caption;
+  const rtl=$('rail-title');if(rtl)rtl.textContent=RAIL_T[k];
+  hero.setAttribute('aria-label',SKINS[k].caption);
+  const gl=$('bggl');
+  if(k==='nebula'){GL.init()}
+  gl.hidden=k!=='nebula';
+  render(S.reduce?4000:performance.now(),16);
+}
+document.querySelector('.skins').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-skin]');if(!b||b.dataset.skin===curSkin)return;
+  const k=b.dataset.skin;
+  if(!document.startViewTransition||S.reduce){applySkin(k);return}
+  const x=e.clientX||innerWidth-40,y=e.clientY||30,r=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+  const vt=document.startViewTransition(()=>applySkin(k));
+  vt.ready.then(()=>{document.documentElement.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${r}px at ${x}px ${y}px)`]},{duration:950,easing:'cubic-bezier(.65,0,.25,1)',pseudoElement:'::view-transition-new(root)'})}).catch(()=>{});
+});
+
+
+/* =================================================================
+   SIDE GUTTERS — left: skin graphic on the bg canvas; right: question map
+   ================================================================= */
+function sideBox(){
+  const g=(innerWidth-1120)/2;
+  if(innerWidth<1520||g<200)return null;
+  const w=Math.min(g-48,340);
+  return {cx:(g/2)*DPR,w:w*DPR,top:96*DPR,bot:BH-28*DPR};
+}
+function track(ctx,px){if('letterSpacing' in ctx)ctx.letterSpacing=px+'px'}
+
+/* HUD — ETL pipeline: dirty packets → transform scanner → clean rows stacking into a fact table */
+HUD.side=function(t,dt,b){
+  const k=dt/16,{cx,w,top,bot}=b,H=bot-top;
+  if(!this.ss)this.ss={pk:[],fill:0,loaded:184220,next:0,flash:0};
+  const ss=this.ss,tw=Math.min(w*.5,132*DPR),x0=cx-tw/2,cols=6,cw=tw/cols;
+  const yE=top+H*.07,yT=top+H*.34,yL=top+H*.56,sTop=yL+46*DPR;
+  const rows=Math.max(4,Math.min(14,Math.floor((bot-70*DPR-sTop)/cw))),cap=rows*cols,sBot=sTop+rows*cw;
+  bx.save();bx.textAlign='center';bx.font=`600 ${Math.round(10.5*DPR)}px "Chakra Petch",sans-serif`;track(bx,2.4*DPR);
+  const g=bx.createLinearGradient(0,yE,0,yL);g.addColorStop(0,'rgba(169,139,255,.3)');g.addColorStop(.5,'rgba(98,240,255,.4)');g.addColorStop(1,'rgba(98,240,255,.2)');
+  bx.strokeStyle=g;bx.lineWidth=DPR;bx.beginPath();bx.moveTo(x0,yE);bx.lineTo(x0,yL);bx.moveTo(x0+tw,yE);bx.lineTo(x0+tw,yL);bx.stroke();
+  bx.strokeStyle='rgba(98,240,255,.18)';bx.beginPath();bx.moveTo(x0,yL);bx.lineTo(x0,sTop-6*DPR);bx.moveTo(x0+tw,yL);bx.lineTo(x0+tw,sTop-6*DPR);bx.stroke();
+  const station=(y,label,col)=>{const ex=14*DPR;bx.strokeStyle=col;bx.lineWidth=1.2*DPR;bx.beginPath();bx.moveTo(x0-ex,y);bx.lineTo(x0+tw+ex,y);
+    bx.moveTo(x0-ex,y-5*DPR);bx.lineTo(x0-ex,y+5*DPR);bx.moveTo(x0+tw+ex,y-5*DPR);bx.lineTo(x0+tw+ex,y+5*DPR);bx.stroke();bx.fillStyle=col;bx.fillText(label,cx,y-11*DPR)};
+  station(yE,'EXTRACT','rgba(169,139,255,.85)');
+  station(yL,'LOAD','rgba(98,240,255,.85)');
+  const sc=.6+.4*Math.sin(t*.006);
+  const sg=bx.createLinearGradient(0,yT-14*DPR,0,yT+14*DPR);sg.addColorStop(0,'rgba(255,203,116,0)');sg.addColorStop(.5,`rgba(255,203,116,${.28*sc})`);sg.addColorStop(1,'rgba(255,203,116,0)');
+  bx.fillStyle=sg;bx.fillRect(x0-18*DPR,yT-14*DPR,tw+36*DPR,28*DPR);
+  bx.strokeStyle=`rgba(255,220,160,${.55+.4*sc})`;bx.lineWidth=1.4*DPR;bx.beginPath();bx.moveTo(x0-18*DPR,yT);bx.lineTo(x0+tw+18*DPR,yT);bx.stroke();
+  bx.fillStyle='rgba(255,203,116,.9)';bx.fillText('TRANSFORM',cx,yT-18*DPR);
+  bx.font=`500 ${Math.round(9*DPR)}px "Chakra Petch",sans-serif`;track(bx,1.6*DPR);
+  bx.fillStyle='rgba(146,157,196,.6)';bx.fillText('clean · conform · key',cx,yT+26*DPR);
+  if(!S.reduce&&t>ss.next){ss.pk.push({x:x0+cw/2+rnd()*(tw-cw),y:yE+4*DPR,v:(1+rnd()*1.1)*DPR,clean:false,s:(3+rnd()*5)*DPR,r:rnd()*TAU,lane:0,fl:0});ss.next=t+120+rnd()*170}
+  bx.globalCompositeOperation='lighter';
+  for(let i=ss.pk.length-1;i>=0;i--){const p=ss.pk[i];
+    if(!S.reduce){p.y+=p.v*k*(p.clean?1.5:1);
+      if(!p.clean){p.x+=(rnd()-.5)*1.7*DPR*k;p.x=Math.max(x0+4*DPR,Math.min(x0+tw-4*DPR,p.x));p.r+=.06*k;
+        if(p.y>=yT){p.clean=true;p.lane=Math.min(cols-1,Math.max(0,Math.floor((p.x-x0)/cw)));p.fl=1}}
+      else{p.x+=(x0+cw*(p.lane+.5)-p.x)*.22*k;p.fl*=Math.pow(.9,k)}}
+    if(!p.clean){bx.save();bx.translate(p.x,p.y);bx.rotate(p.r);bx.fillStyle='rgba(169,139,255,.55)';bx.strokeStyle='rgba(210,190,255,.7)';bx.lineWidth=DPR*.8;
+      bx.beginPath();bx.moveTo(-p.s/2,-p.s/2);bx.lineTo(p.s/2,-p.s/3);bx.lineTo(p.s/3,p.s/2);bx.lineTo(-p.s/2,p.s/4);bx.closePath();bx.fill();bx.stroke();bx.restore()}
+    else{if(p.fl>.05)sprite(bx,GLOW.amber,p.x,p.y,34*DPR*p.fl,p.fl);bx.fillStyle='rgba(98,240,255,.95)';bx.fillRect(p.x-3*DPR,p.y-3*DPR,6*DPR,6*DPR);sprite(bx,GLOW.cyan,p.x,p.y,14*DPR,.5)}
+    if(p.y>=yL){ss.pk.splice(i,1);ss.fill++;ss.loaded+=40+Math.floor(rnd()*260);if(ss.fill>=cap){ss.fill=0;ss.flash=1}}
+  }
+  bx.globalCompositeOperation='source-over';
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+    const idx=r*cols+c,x=x0+c*cw,y=sBot-(r+1)*cw;
+    bx.strokeStyle='rgba(98,240,255,.13)';bx.lineWidth=DPR;bx.strokeRect(x+1.5*DPR,y+1.5*DPR,cw-3*DPR,cw-3*DPR);
+    if(idx<ss.fill){const fresh=idx>=ss.fill-cols;bx.fillStyle=fresh?'rgba(98,240,255,.6)':'rgba(98,240,255,.24)';bx.fillRect(x+2.5*DPR,y+2.5*DPR,cw-5*DPR,cw-5*DPR)}
+  }
+  if(ss.flash>0){bx.fillStyle=`rgba(109,255,179,${.35*ss.flash})`;bx.fillRect(x0,sTop,tw,sBot-sTop);if(!S.reduce)ss.flash-=.015*k}
+  bx.font=`600 ${Math.round(10*DPR)}px "Chakra Petch",sans-serif`;track(bx,2*DPR);
+  bx.fillStyle=ss.flash>0?'rgba(109,255,179,.95)':'rgba(146,157,196,.85)';
+  bx.fillText(ss.flash>0?'COMMIT ✓':'FACT_SALES',cx,sTop-12*DPR);
+  bx.fillStyle='rgba(93,104,148,.9)';bx.font=`500 ${Math.round(9*DPR)}px "Chakra Petch",sans-serif`;bx.fillText('ROWS LOADED',cx,sBot+22*DPR);
+  bx.fillStyle='rgba(232,237,255,.95)';bx.font=`400 ${Math.round(15*DPR)}px "Michroma",sans-serif`;track(bx,.5*DPR);
+  bx.fillText(ss.loaded.toLocaleString('en-ZA'),cx,sBot+44*DPR);
+  bx.restore();
+};
+
+/* NEBULA — spiral galaxy with astrolabe rings, ringed planet, declination scale */
+NEB.side=function(t,dt,b){
+  const {cx,w,top,bot}=b,H=bot-top;
+  if(!this.gx){this.gx=[];
+    for(let i=0;i<1700;i++){const arm=i%2,d=Math.pow(rnd(),.55),sc=(rnd()-.5)*(.6-.32*d),a=arm*Math.PI+d*4.6+sc,r=rnd();
+      const c=d<.18?`rgba(255,226,170,${.45+rnd()*.4})`:r<.07?`rgba(255,140,200,${.55+rnd()*.35})`:r<.5?`rgba(190,215,255,${.22+rnd()*.5})`:`rgba(255,245,230,${.18+rnd()*.4})`;
+      this.gx.push({a,d,c,s:(rnd()<.05?1.9:.85+rnd()*.7)*DPR})}
+    for(let i=0;i<320;i++)this.gx.push({a:rnd()*TAU,d:Math.pow(rnd(),2)*.22,c:`rgba(255,236,200,${.3+rnd()*.5})`,s:(.8+rnd()*.6)*DPR});
+    this.moonPh=rnd()*TAU;
+  }
+  const R=Math.min(w*.38,H*.26),gy=top+H*.3,rot=S.reduce?0:t*.00005,tilt=-.42,ct=Math.cos(tilt),st=Math.sin(tilt);
+  bx.save();
+  bx.strokeStyle='rgba(244,201,122,.22)';bx.lineWidth=DPR;
+  const sx=cx-w/2+4*DPR;bx.beginPath();bx.moveTo(sx,top);bx.lineTo(sx,bot);bx.stroke();
+  bx.font=`500 ${Math.round(8.5*DPR)}px "IBM Plex Mono",monospace`;bx.fillStyle='rgba(185,173,201,.55)';bx.textAlign='left';
+  const stp=36*DPR,off=((window.scrollY||0)*DPR*.25)%stp;
+  for(let y=top-off,i=0;y<bot;y+=stp,i++){if(y<top)continue;const deg=Math.round(60-((y-top+((window.scrollY||0)*DPR*.25))/stp)*5);
+    const major=deg%15===0;bx.beginPath();bx.moveTo(sx,y);bx.lineTo(sx+(major?12:5)*DPR,y);bx.stroke();
+    if(major)bx.fillText((deg>0?'+':deg<0?'−':'')+Math.abs(deg)+'°',sx+16*DPR,y+3*DPR)}
+  bx.globalCompositeOperation='lighter';
+  sprite(bx,GLOW.rose,cx,gy,R*2.2,.16);
+  sprite(bx,GLOW.gold,cx,gy,R*1.3,.35);
+  for(const p of this.gx){const a=p.a+rot*(1+.5*(1-p.d));const lx=Math.cos(a)*p.d*R,ly=Math.sin(a)*p.d*R*.38;
+    bx.fillStyle=p.c;bx.fillRect(cx+lx*ct-ly*st,gy+lx*st+ly*ct,p.s,p.s)}
+  sprite(bx,GLOW.gold,cx,gy,R*.75,.55);sprite(bx,GLOW.white,cx,gy,R*.32,.95);
+  spikes(bx,cx,gy,R*.35,.5,'255,236,200');
+  bx.globalCompositeOperation='source-over';
+  bx.setLineDash([2*DPR,6*DPR]);
+  bx.strokeStyle='rgba(244,201,122,.28)';bx.beginPath();bx.ellipse(cx,gy,R*1.14,R*1.14*.4,tilt,0,TAU);bx.stroke();
+  bx.strokeStyle='rgba(244,201,122,.12)';bx.beginPath();bx.ellipse(cx,gy,R*1.32,R*1.32*.4,tilt,0,TAU);bx.stroke();
+  bx.setLineDash([]);
+  bx.strokeStyle='rgba(244,201,122,.35)';
+  for(let i=0;i<72;i++){const a=i/72*TAU,major=i%6===0,r1=R*1.32,r2=r1+(major?9:4)*DPR;
+    const p=(r)=>{const lx=Math.cos(a)*r,ly=Math.sin(a)*r*.4;return [cx+lx*ct-ly*st,gy+lx*st+ly*ct]};const A=p(r1),B=p(r2);
+    bx.beginPath();bx.moveTo(A[0],A[1]);bx.lineTo(B[0],B[1]);bx.stroke()}
+  bx.textAlign='center';
+  bx.font=`italic 500 ${Math.round(22*DPR)}px "Cormorant Garamond",Georgia,serif`;bx.fillStyle='rgba(246,239,226,.92)';
+  bx.fillText('MODEL 621',cx,gy+R*.82);
+  bx.font=`500 ${Math.round(8.5*DPR)}px "IBM Plex Mono",monospace`;track(bx,2*DPR);bx.fillStyle='rgba(185,173,201,.65)';
+  bx.fillText('SPARSE ROUTING · ACTIVE EXPERTS',cx,gy+R*.82+18*DPR);track(bx,0);
+  const py=top+H*.76,pr=Math.min(w*.13,54*DPR),rtilt=-.32;
+  const ring=(from,to,alpha)=>{for(const [rr,wid,al] of [[2.15,.16,.5],[1.75,.1,.32]]){bx.strokeStyle=`rgba(244,201,122,${al*alpha})`;bx.lineWidth=pr*wid;bx.beginPath();bx.ellipse(cx,py,pr*rr,pr*rr*.28,rtilt,from,to);bx.stroke()}};
+  ring(Math.PI,TAU,1);
+  const pg=bx.createRadialGradient(cx-pr*.4,py-pr*.45,pr*.1,cx,py,pr);
+  pg.addColorStop(0,'rgb(255,232,196)');pg.addColorStop(.35,'rgb(214,150,150)');pg.addColorStop(.75,'rgb(92,46,96)');pg.addColorStop(1,'rgb(22,10,32)');
+  bx.fillStyle=pg;bx.beginPath();bx.arc(cx,py,pr,0,TAU);bx.fill();
+  bx.save();bx.beginPath();bx.arc(cx,py,pr,0,TAU);bx.clip();
+  for(let i=-3;i<=3;i++){bx.strokeStyle=`rgba(255,220,200,${.06+.04*(i%2===0)})`;bx.lineWidth=pr*.09;bx.beginPath();bx.ellipse(cx,py+i*pr*.24,pr*1.1,pr*.12,rtilt,0,TAU);bx.stroke()}
+  bx.restore();
+  ring(0,Math.PI,1);
+  const ma=(S.reduce?this.moonPh:t*.0004+this.moonPh),mx=cx+Math.cos(ma)*pr*2.8,my=py+Math.sin(ma)*pr*2.8*.28;
+  if(Math.sin(ma)>0||Math.hypot(mx-cx,my-py)>pr){bx.globalCompositeOperation='lighter';sprite(bx,GLOW.ice,mx,my,14*DPR,.7);bx.globalCompositeOperation='source-over';bx.fillStyle='rgba(230,240,255,.95)';bx.beginPath();bx.arc(mx,my,2.2*DPR,0,TAU);bx.fill()}
+  bx.font=`italic 500 ${Math.round(17*DPR)}px "Cormorant Garamond",Georgia,serif`;bx.fillStyle='rgba(246,239,226,.85)';
+  bx.fillText('AGENT_STATE',cx,py+pr*1.9);
+  bx.font=`500 ${Math.round(8.5*DPR)}px "IBM Plex Mono",monospace`;track(bx,2*DPR);bx.fillStyle='rgba(185,173,201,.6)';
+  bx.fillText('IN CONTEXT OF THE TASK',cx,py+pr*1.9+16*DPR);
+  bx.restore();
+};
+
+/* ABYSS — scroll-linked depth gauge, bubble column, anglerfish whose lure lights the panel */
+ABY.side=function(t,dt,b){
+  const k=dt/16,{cx,w,top,bot}=b,H=bot-top,sy=window.scrollY||0,mpp=.8;
+  const gx=cx-w*.46;
+  bx.save();
+  bx.strokeStyle='rgba(79,240,216,.28)';bx.lineWidth=DPR;bx.beginPath();bx.moveTo(gx,top);bx.lineTo(gx,bot);bx.stroke();
+  bx.font=`500 ${Math.round(8.5*DPR)}px "Azeret Mono",monospace`;bx.textAlign='left';
+  const depthAt=yCss=>200+(sy+yCss)*mpp;
+  const step=50;let d=Math.ceil(depthAt(top/DPR)/step)*step;
+  for(;;d+=step){const y=((d-200)/mpp-sy)*DPR;if(y>bot)break;if(y<top)continue;const major=d%250===0;
+    bx.strokeStyle=`rgba(79,240,216,${major?.6:.3})`;bx.beginPath();bx.moveTo(gx,y);bx.lineTo(gx+(major?14:6)*DPR,y);bx.stroke();
+    if(major){bx.fillStyle='rgba(146,189,187,.7)';bx.fillText(d.toLocaleString('en-ZA')+' m',gx+18*DPR,y+3*DPR)}}
+  const ym=top+H*.42,dep=depthAt(ym/DPR);
+  bx.fillStyle='rgba(79,240,216,.95)';bx.beginPath();bx.moveTo(gx-1*DPR,ym);bx.lineTo(gx-9*DPR,ym-6*DPR);bx.lineTo(gx-9*DPR,ym+6*DPR);bx.closePath();bx.fill();
+  const bw=Math.min(w*.52,150*DPR),bh=66*DPR,bxx=gx+12*DPR,byy=ym-bh/2;
+  bx.fillStyle='rgba(2,22,28,.82)';bx.strokeStyle='rgba(79,240,216,.5)';bx.lineWidth=DPR;
+  bx.beginPath();if(bx.roundRect)bx.roundRect(bxx,byy,bw,bh,10*DPR);else bx.rect(bxx,byy,bw,bh);bx.fill();bx.stroke();
+  bx.fillStyle='rgba(146,189,187,.85)';bx.fillText('DEPTH',bxx+12*DPR,byy+17*DPR);
+  bx.fillStyle='rgba(226,251,246,.98)';bx.font=`300 ${Math.round(19*DPR)}px "Unbounded",sans-serif`;
+  bx.fillText(Math.round(dep).toLocaleString('en-ZA')+' m',bxx+12*DPR,byy+40*DPR);
+  bx.font=`500 ${Math.round(8*DPR)}px "Azeret Mono",monospace`;bx.fillStyle='rgba(146,189,187,.75)';
+  bx.fillText((Math.max(1.4,4-dep/1000)).toFixed(1)+'°C · '+Math.round(dep/10)+' bar',bxx+12*DPR,byy+56*DPR);
+  if(!this.bub)this.bub=[];
+  if(!S.reduce&&rnd()<.07*k)this.bub.push({x:gx+20*DPR+rnd()*14*DPR,y:bot,r:(1.4+rnd()*3.6)*DPR,v:(.6+rnd()*.9)*DPR,ph:rnd()*TAU});
+  for(let i=this.bub.length-1;i>=0;i--){const p=this.bub[i];
+    if(!S.reduce){p.y-=p.v*k;p.x+=Math.sin(t*.004+p.ph)*.3*DPR*k}
+    if(p.y<top-10){this.bub.splice(i,1);continue}
+    bx.strokeStyle='rgba(160,255,242,.45)';bx.lineWidth=DPR*.9;bx.beginPath();bx.arc(p.x,p.y,p.r,0,TAU);bx.stroke();
+    bx.fillStyle='rgba(230,255,252,.7)';bx.beginPath();bx.arc(p.x-p.r*.35,p.y-p.r*.35,p.r*.25,0,TAU);bx.fill()}
+  const fs=Math.min(w*.62,240*DPR);
+  this.drawAngler(cx+w*.16,top+H*.74+(S.reduce?0:Math.sin(t*.0006)*14*DPR),fs,t);
+  bx.restore();
+};
+ABY.drawAngler=function(fx,fy,s,t){
+  const c=bx;c.save();c.translate(fx,fy);const tilt=S.reduce?0:Math.sin(t*.0007)*.05;c.rotate(tilt);
+  const sw=S.reduce?0:Math.sin(t*.003);
+  const lx=.68*s+(S.reduce?0:Math.sin(t*.0011)*.04*s),ly=-.64*s+(S.reduce?0:Math.cos(t*.0013)*.03*s),lp=.75+.25*Math.sin(t*.004);
+  c.globalCompositeOperation='lighter';sprite(c,GLOW.lure,lx,ly,s*1.9*lp,.2);c.globalCompositeOperation='source-over';
+  const tail=new Path2D();tail.moveTo(-.42*s,0);tail.quadraticCurveTo(-.6*s,-.18*s+sw*.05*s,-.74*s,-.28*s+sw*.08*s);tail.quadraticCurveTo(-.64*s,0,-.74*s,.28*s+sw*.08*s);tail.quadraticCurveTo(-.6*s,.18*s+sw*.05*s,-.42*s,0);
+  c.fillStyle='rgba(8,30,34,.95)';c.fill(tail);c.strokeStyle='rgba(79,240,216,.22)';c.lineWidth=DPR;c.stroke(tail);
+  c.strokeStyle='rgba(79,240,216,.12)';for(let i=-2;i<=2;i++){c.beginPath();c.moveTo(-.46*s,0);c.lineTo(-.7*s,i*.11*s+sw*.06*s);c.stroke()}
+  const body=new Path2D();body.moveTo(.47*s,-.03*s);body.bezierCurveTo(.32*s,-.46*s,-.18*s,-.42*s,-.45*s,-.05*s);body.lineTo(-.45*s,.05*s);
+  body.bezierCurveTo(-.18*s,.36*s,.26*s,.40*s,.50*s,.17*s);body.lineTo(.30*s,.07*s);body.closePath();
+  const bgr=c.createRadialGradient(.34*s,-.28*s,0,.1*s,0,.62*s);bgr.addColorStop(0,'rgb(40,78,76)');bgr.addColorStop(.45,'rgb(13,38,42)');bgr.addColorStop(1,'rgb(3,12,16)');
+  c.fillStyle=bgr;c.fill(body);
+  const rl=c.createLinearGradient(lx,ly,-.4*s,.3*s);rl.addColorStop(0,`rgba(255,226,122,${.6*lp})`);rl.addColorStop(.55,'rgba(79,240,216,.14)');rl.addColorStop(1,'rgba(79,240,216,.05)');
+  c.strokeStyle=rl;c.lineWidth=1.5*DPR;c.stroke(body);
+  c.save();c.clip(body);c.globalCompositeOperation='lighter';sprite(c,GLOW.lure,lx,ly,s*1.3*lp,.18);c.restore();
+  c.beginPath();c.moveTo(.47*s,-.03*s);c.lineTo(.30*s,.07*s);c.lineTo(.50*s,.17*s);c.closePath();c.fillStyle='rgba(26,3,12,.96)';c.fill();
+  c.fillStyle='rgba(228,248,242,.92)';
+  for(let i=0;i<5;i++){const f=i/5,x=.46*s-.15*s*f,y=-.03*s+.09*s*f;c.beginPath();c.moveTo(x-.013*s,y);c.lineTo(x+.013*s,y);c.lineTo(x+.004*s,y+(.055-.007*i)*s);c.fill()}
+  for(let i=0;i<4;i++){const f=i/4,x=.49*s-.17*s*f,y=.17*s-.09*s*f;c.beginPath();c.moveTo(x-.013*s,y);c.lineTo(x+.013*s,y);c.lineTo(x+.004*s,y-(.05-.007*i)*s);c.fill()}
+  for(let i=0;i<8;i++){const x=.16*s-i*.075*s,y=.05*s+Math.sin(i*.6)*.015*s,a=.25+.75*Math.max(0,Math.sin(t*.004-i*.7));
+    c.globalCompositeOperation='lighter';sprite(c,GLOW.teal,x,y,.07*s,a*.8);c.globalCompositeOperation='source-over'}
+  c.save();c.translate(.02*s,.11*s);c.rotate(.5+(S.reduce?0:Math.sin(t*.005)*.25));
+  c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(-.08*s,.11*s,-.17*s,.08*s);c.quadraticCurveTo(-.1*s,.02*s,0,0);
+  c.fillStyle='rgba(28,68,70,.85)';c.fill();c.strokeStyle='rgba(79,240,216,.3)';c.lineWidth=DPR;c.stroke();c.restore();
+  c.strokeStyle='rgba(120,175,165,.55)';c.lineWidth=DPR;
+  for(let i=0;i<5;i++){const x=.04*s-i*.075*s,y=-.33*s+i*i*.012*s;c.beginPath();c.moveTo(x,y);c.lineTo(x-.035*s,y-.075*s+sw*.01*s);c.stroke()}
+  const ex=.22*s,ey=-.17*s,er=.05*s;
+  c.fillStyle='rgba(180,240,228,.12)';c.beginPath();c.arc(ex,ey,er*1.5,0,TAU);c.fill();
+  c.fillStyle='rgb(6,18,20)';c.beginPath();c.arc(ex,ey,er,0,TAU);c.fill();
+  c.strokeStyle=`rgba(255,226,122,${.4+.3*lp})`;c.lineWidth=DPR;c.stroke();
+  let dx=1,dy=0;if(PTR.on){const wx=fx+ex,wy=fy+ey;const m=Math.hypot(PTR.x-wx,PTR.y-wy)||1;dx=(PTR.x-wx)/m;dy=(PTR.y-wy)/m}
+  c.fillStyle='rgba(255,255,255,.92)';c.beginPath();c.arc(ex+dx*er*.4,ey+dy*er*.4,er*.28,0,TAU);c.fill();
+  c.strokeStyle='rgba(150,195,180,.8)';c.lineWidth=1.8*DPR;c.beginPath();c.moveTo(.2*s,-.33*s);c.quadraticCurveTo(.36*s,-.92*s,lx,ly);c.stroke();
+  c.globalCompositeOperation='lighter';sprite(c,GLOW.lure,lx,ly,.46*s*lp,1);c.globalCompositeOperation='source-over';
+  c.fillStyle='rgb(255,252,232)';c.beginPath();c.arc(lx,ly,.022*s,0,TAU);c.fill();
+  c.restore();
+};
+
+/* ---------------- right gutter: question map ---------------- */
+const RAIL_T={hud:'Mission map',nebula:'Star chart',abyss:'Dive log'};
+let railCur=null;
+function renderRail(){
+  const el=$('rail');if(!el)return;
+  let h=`<div class="rail-h"><span id="rail-title">${RAIL_T[curSkin]||'Mission map'}</span><b>${Math.round(100*learnedMarks(DATA)/marksOf(DATA))}%</b></div>`;
+  for(const [k,v] of Object.entries(SECTORS)){const list=DATA.filter(d=>d.s===k);
+    h+=`<div class="rail-sec"><div class="rail-name">${v.name}<i>${Math.round(100*learnedMarks(list)/marksOf(list))}%</i></div><div class="rail-dots">${list.map(d=>`<button class="rd${S.learned.has(d.id)?' done':''}" data-id="${d.id}" title="${v.name} Q${d.n} · ${d.m} marks" aria-label="${v.name} question ${d.n}">${d.n}</button>`).join('')}</div></div>`}
+  h+=`<div class="rail-foot">Tap a node to jump</div>`;
+  el.innerHTML=h;railMark();
+}
+function railMark(){const id=S.mode==='flash'?S.order[S.idx]:railCur;document.querySelectorAll('.rd').forEach(b=>b.classList.toggle('cur',b.dataset.id===id))}
+function jumpTo(id){
+  const d=DATA.find(x=>x.id===id);if(!d)return;
+  if(S.mode==='flash'){
+    if(!inSector(d)){S.sector='all';store.set('sector','all');renderSectors()}
+    if(S.unlearnedOnly&&S.learned.has(id)){S.unlearnedOnly=false;$('d-unlearned').setAttribute('aria-pressed','false')}
+    buildDeck(true);S.idx=Math.max(0,S.order.indexOf(id));S.flipped=false;renderCard();return;
+  }
+  let re=false;
+  if(!inSector(d)){S.sector='all';store.set('sector','all');renderSectors();re=true}
+  if(S.query&&!d.text.includes(S.query)){S.query='';$('q-search').value='';re=true}
+  if(S.hideLearned&&S.learned.has(id)){S.hideLearned=false;$('hide-learned').setAttribute('aria-pressed','false');re=true}
+  if(re)renderList();
+  const el=$('q-'+id);if(!el)return;
+  el.scrollIntoView({behavior:S.reduce?'auto':'smooth',block:'start'});
+  el.classList.remove('ping');void el.offsetWidth;el.classList.add('ping');
+  railCur=id;railMark();
+}
+$('rail').addEventListener('click',e=>{const b=e.target.closest('.rd');if(b)jumpTo(b.dataset.id)});
+let railRaf=0;
+window.addEventListener('scroll',()=>{if(railRaf)return;railRaf=requestAnimationFrame(()=>{railRaf=0;if(S.mode!=='study')return;
+  let cur=null;for(const q of document.querySelectorAll('#list .q')){const r=q.getBoundingClientRect();if(r.bottom>innerHeight*.32){cur=r.top<innerHeight*.8?q.dataset.id:null;break}}
+  if(cur!==railCur){railCur=cur;railMark()}})},{passive:true});
+
+/* ---------------- boot ---------------- */
+if(!['all','inf','rag','agent','mcq'].includes(S.sector))S.sector='all';
+renderStats();renderSectors();
+setMode(location.hash==='#flashcards'?'flash':'study');
+sizeAll();
+applySkin(store.get('skin','hud'));
+if(!S.reduce)requestAnimationFrame(t=>{last=t;loop(t)});
+else if(document.fonts)document.fonts.ready.then(()=>render(4000,16));
+</script>
