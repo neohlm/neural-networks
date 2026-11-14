@@ -751,7 +751,13 @@ const DATA=[
   P('Load as name-value pairs —','absorb unexpected content at GB/s (rare postage stamp example).',2),
   P('Data virtualisation —','logical structures (views) over physical data for prototyping; materialise once vetted.',2))}
 ];
-DATA.forEach(d=>{d.id=d.s+'-'+d.n;d.html=d.a();d.text=(d.q+' '+(d.af||'')+' '+(d.sub||'')+' '+d.html.replace(/<[^>]+>/g,' ')).toLowerCase()});
+DATA.forEach(d=>{
+  d.id=d.s+'-'+d.n;
+  d.html=d.a();
+  d.optionsHtml=d.s==='mcq'?(d.html.match(/<div class="mcq">[\s\S]*?<\/div>/)||[''])[0]:'';
+  if(d.optionsHtml)d.html=d.html.replace(d.optionsHtml,'');
+  d.text=(d.q+' '+(d.af||'')+' '+(d.sub||'')+' '+d.optionsHtml+' '+d.html.replace(/<[^>]+>/g,' ')).toLowerCase()
+});
 qHead = d=>`<span class="qtag">${SECTORS[d.s].name.toUpperCase()} · Q${pad(d.n)}</span><span class="chip marks">${d.m} marks</span><span class="chip">${d.src}</span>${S.learned.has(d.id)?'<span class="chip learned">● Learned</span>':''}`;
 
 /* ---------- Local LLMs & Agents practice bank ----------
@@ -796,7 +802,13 @@ const LOCAL_DATA=[
 Object.keys(SECTORS).forEach(k=>delete SECTORS[k]);
 Object.assign(SECTORS,{inf:{code:'Sector A',name:'Inference Systems',long:'MoE, quantization & performance'},rag:{code:'Sector B',name:'RAG & Retrieval',long:'Embeddings, search & groundedness'},agent:{code:'Sector C',name:'Agents',long:'Loops, tools & safety'},mcq:{code:'Sector D',name:'Honours MCQ',long:'Medium-to-hard application questions'}});
 DATA.splice(0,DATA.length,...LOCAL_DATA);
-DATA.forEach(d=>{d.id=d.s+'-'+d.n;d.html=d.a();d.text=(d.q+' '+(d.af||'')+' '+(d.sub||'')+' '+d.html.replace(/<[^>]+>/g,' ')).toLowerCase()});
+DATA.forEach(d=>{
+  d.id=d.s+'-'+d.n;
+  d.html=d.a();
+  d.optionsHtml=d.s==='mcq'?(d.html.match(/<div class="mcq">[\s\S]*?<\/div>/)||[''])[0]:'';
+  if(d.optionsHtml)d.html=d.html.replace(d.optionsHtml,'');
+  d.text=(d.q+' '+(d.af||'')+' '+(d.sub||'')+' '+d.optionsHtml+' '+d.html.replace(/<[^>]+>/g,' ')).toLowerCase()
+});
 
 /* ---------- state ---------- */
 const store={get(k,f){try{const v=localStorage.getItem('wcodex:'+k);return v==null?f:JSON.parse(v)}catch(e){return f}},set(k,v){try{localStorage.setItem('wcodex:'+k,JSON.stringify(v))}catch(e){}}};
@@ -848,7 +860,7 @@ function renderList(){
     html+=`<article id="q-${d.id}" class="q hud${open?' open':''}${S.learned.has(d.id)?' is-learned':''}" data-id="${d.id}">
       <div class="qhead">${qHead(d)}</div>
       <h3 class="qtitle">${d.q}</h3>
-      ${d.af?`<p class="af">${d.af}</p>`:''}${d.sub?`<p class="sub">${d.sub}</p>`:''}
+      ${d.af?`<p class="af">${d.af}</p>`:''}${d.sub?`<p class="sub">${d.sub}</p>`:''}${d.optionsHtml||''}
       <div class="qactions">
         <button class="btn" data-act="toggle" aria-expanded="${open}">${open?'Hide answer':'Reveal answer'}</button>
         <button class="btn good" data-act="learn" aria-pressed="${S.learned.has(d.id)}">${S.learned.has(d.id)?'Learned ✓':'Mark learned'}</button>
@@ -895,7 +907,7 @@ function renderCard(){
   if(S.idx>=S.order.length)S.idx=0;
   const d=DATA.find(x=>x.id===S.order[S.idx]);
   $('front').innerHTML=`<div class="ftop">${qHead(d)}</div>
-    <div><p class="fq">${d.q}</p>${d.af?`<p class="af" style="font-size:1rem">${d.af}</p>`:''}${d.sub?`<p class="sub">${d.sub}</p>`:''}</div>
+    <div><p class="fq">${d.q}</p>${d.af?`<p class="af" style="font-size:1rem">${d.af}</p>`:''}${d.sub?`<p class="sub">${d.sub}</p>`:''}${d.optionsHtml||''}</div>
     <div class="fhint">Recall your answer · then flip</div>`;
   $('back').innerHTML=`<div class="ftop"><span class="qtag" style="color:var(--violet)">ANSWER · Q${pad(d.n)}</span><span class="chip marks">${d.m} marks</span></div>
     <div class="fscroll answer">${d.html}</div>`;
