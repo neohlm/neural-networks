@@ -1,0 +1,9 @@
+[project]
+name = "local-study-assistant"
+version = "0.1.0"
+description = "A local, source-grounded study assistant using Unsloth Studio for inference"
+requires-python = ">=3.11,<3.14"
+dependencies = ["pypdf>=5.0,<7"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
