@@ -21,137 +21,145 @@ PAGE = r"""
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Local Study Assistant</title>
 <style>
-:root{
-  color-scheme:dark;
-  --void:#04050c;
-  --glass:rgba(14,20,46,.78);
-  --glass-soft:rgba(20,28,62,.82);
-  --line:rgba(177,140,255,.24);
-  --line-bright:rgba(189,148,255,.62);
-  --ink:#e8edff;
-  --dim:#a3adce;
-  --faint:#7480a8;
-  --purple:#bd94ff;
-  --magenta:#ec8bff;
-  --amber:#ffcb74;
-  --green:#6dffb3;
-  --red:#ff948b;
-  --on-accent:#04050c;
-  --body-glow:
-    radial-gradient(ellipse 70% 50% at 85% -5%,rgba(189,148,255,.2),transparent 60%),
-    radial-gradient(ellipse 55% 45% at -5% 35%,rgba(189,148,255,.13),transparent 60%),
-    radial-gradient(ellipse 60% 40% at 50% 110%,rgba(236,139,255,.07),transparent 60%);
-}
 *{box-sizing:border-box}
-html{min-height:100%;scroll-behavior:smooth}
-body{margin:0;min-height:100vh;background-color:var(--void);background-image:var(--body-glow);background-attachment:fixed;color:var(--ink);font:15px/1.6 "Sora","Segoe UI",system-ui,sans-serif}
-::selection{background:rgba(189,148,255,.38);color:#fff}
-main{position:relative;z-index:1;max-width:940px;margin:0 auto;padding:34px 22px 60px}
-header{display:flex;align-items:center;gap:15px;margin-bottom:26px;padding:12px 0 18px;border-bottom:1px solid var(--line)}
-.mark{position:relative;width:46px;height:46px;flex:none;display:grid;place-items:center}
-.mark-orbit{position:absolute;inset:4px;border:1px solid rgba(189,148,255,.72);border-left-color:rgba(189,148,255,.16);border-radius:50%;box-shadow:0 0 16px rgba(189,148,255,.13);animation:orbit-spin 7s linear infinite}
-.mark-orbit::before{content:"";position:absolute;inset:5px;border:1px solid rgba(236,139,255,.22);border-radius:50%}
-.mark-satellite{position:absolute;top:1px;left:50%;width:6px;height:6px;border-radius:50%;background:var(--magenta);box-shadow:0 0 10px var(--magenta);transform:translateX(-50%)}
-.mark-core{width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,#e6d4ff 18%,var(--purple) 52%,#7045c8 100%);box-shadow:0 0 12px rgba(189,148,255,.78),0 0 26px rgba(189,148,255,.28);animation:core-breathe 2.4s ease-in-out infinite}
-@keyframes orbit-spin{to{transform:rotate(360deg)}}
-@keyframes core-breathe{0%,100%{transform:scale(.88);box-shadow:0 0 9px rgba(189,148,255,.58),0 0 18px rgba(189,148,255,.2)}50%{transform:scale(1.12);box-shadow:0 0 16px rgba(189,148,255,.9),0 0 30px rgba(189,148,255,.36)}}
-.mark+div{transform:translateX(2px)}
-h1{font-family:"Chakra Petch","Segoe UI",system-ui,sans-serif;font-size:1.65rem;line-height:1.2;letter-spacing:.04em;margin:0;background:linear-gradient(100deg,#fff 0%,#e5d7ff 42%,var(--purple) 74%,var(--magenta) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-header p{color:var(--dim);margin:5px 0 0;font-size:.94rem}
-.panel{position:relative;background:var(--glass);border:1px solid var(--line);border-radius:3px;padding:20px;margin:16px 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 18px 45px -35px rgba(0,0,0,.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.panel::before,.panel::after{content:"";position:absolute;width:13px;height:13px;pointer-events:none}
-.panel::before{top:-1px;left:-1px;border-top:2px solid var(--purple);border-left:2px solid var(--purple)}
-.panel::after{right:-1px;bottom:-1px;border-right:2px solid var(--purple);border-bottom:2px solid var(--purple)}
-.panel h2{font-family:"Chakra Petch","Segoe UI",system-ui,sans-serif;font-size:.94rem;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin:0 0 12px}
-small,.muted{color:var(--dim)}
-.status{font-size:.9rem;color:var(--dim);word-break:break-word}
-.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-button,.button{border:1px solid var(--line-bright);border-radius:2px;padding:9px 15px;font:600 .83rem/1.4 "Chakra Petch","Segoe UI",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;background:rgba(189,148,255,.2);color:var(--purple);transition:background .2s,border-color .2s,box-shadow .2s,transform .2s}
-button:hover,.button:hover{background:rgba(189,148,255,.24);border-color:var(--purple);box-shadow:0 0 18px rgba(189,148,255,.24);transform:translateY(-1px)}
-button.secondary{border-color:rgba(169,139,255,.42);background:rgba(189,148,255,.12);color:#c7b5ff}
-button.secondary:hover{border-color:var(--magenta);background:rgba(189,148,255,.2);box-shadow:0 0 18px rgba(189,148,255,.24)}
-button:disabled{opacity:.55;cursor:wait;transform:none;box-shadow:none}
-input[type=file]{max-width:100%;font:inherit;color:var(--dim)}
-input[type=file]::file-selector-button{margin-right:8px;padding:8px 11px;border:1px solid var(--line);border-radius:2px;background:var(--glass-soft);color:var(--ink);font:500 .82rem "Chakra Petch","Segoe UI",system-ui,sans-serif;cursor:pointer}
-select,input[type=text],textarea{font:inherit;border:1px solid var(--line);border-radius:2px;padding:10px 12px;background:rgba(5,8,21,.82);color:var(--ink)}
+:root{color-scheme:dark;--page:#101114;--surface:#191a1d;--surface-2:#222327;--line:#303136;--ink:#ececf0;--muted:#a3a4aa;--soft:#777980;--accent:#a8c7fa;--accent-ink:#172033;--green:#a8d5b5;--red:#ffb4ab}
+html,body{min-height:100%;margin:0}
+body{background:var(--page);color:var(--ink);font:14px/1.55 "Segoe UI",system-ui,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;color:inherit}
+main{min-height:100vh;display:grid;grid-template-rows:64px 1fr}
+header{height:64px;display:flex;align-items:center;gap:14px;padding:0 22px;border-bottom:1px solid var(--line);background:rgba(25,26,29,.94)}
+.mark{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:#283142;color:var(--accent);font-size:19px;font-weight:700}
+.mark::after{content:"✦"}
+.mark-orbit,.mark-satellite,.mark-core{display:none}
+h1{font-size:1.05rem;line-height:1.2;margin:0;font-weight:600;letter-spacing:0}
+header p{margin:2px 0 0;color:var(--muted);font-size:.78rem}
+.workspace{min-height:0;display:grid;grid-template-columns:270px minmax(360px,1fr) 280px}
+.panel{min-width:0;padding:18px;background:var(--surface);border:0;border-right:1px solid var(--line);border-radius:0;margin:0;box-shadow:none}
+.panel::before,.panel::after{display:none}
+.panel h2{font-size:.81rem;line-height:1.3;font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--ink);margin:0}
+small,.muted,.status{color:var(--muted)}
+.status{font-size:.8rem;word-break:break-word;min-height:1.4em}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+button,.button{border:1px solid var(--line);border-radius:999px;padding:8px 13px;font-size:.82rem;font-weight:550;background:var(--surface-2);color:var(--ink);transition:background .15s,border-color .15s}
+button:hover,.button:hover{background:#303137;border-color:#51535a}
+button.secondary{background:transparent;color:var(--ink);border-color:var(--line)}
+button:disabled{opacity:.55;cursor:wait}
+input[type=file]{max-width:100%;font:inherit;color:var(--muted);font-size:.78rem}
+input[type=file]::file-selector-button{margin:0 0 8px;padding:8px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--ink);cursor:pointer}
+select,input[type=text],textarea{font:inherit;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#121316;color:var(--ink)}
 select:focus-visible,input[type=text]:focus-visible,textarea:focus-visible,button:focus-visible,input[type=file]:focus-visible{outline:2px solid var(--purple);outline-offset:3px}
 textarea{width:100%;min-height:110px;resize:vertical}
-label{font:500 .79rem "Chakra Petch","Segoe UI",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:6px}
-.grid{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end}
-.task-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.docs{margin:12px 0 0;padding:0;list-style:none;display:flex;gap:7px;flex-wrap:wrap}
-.docs li{display:flex;align-items:center;gap:8px;background:rgba(189,148,255,.08);border:1px solid var(--line);border-radius:2px;padding:4px 8px 4px 10px;font:.76rem "IBM Plex Mono",ui-monospace,monospace;color:var(--dim);overflow-wrap:anywhere}
-.docs li span{min-width:0;overflow-wrap:anywhere}
-.docs .remove-file{border-color:rgba(255,148,139,.38);background:rgba(255,148,139,.08);color:#ffb3ab;padding:3px 7px;font:500 .66rem "Chakra Petch","Segoe UI",system-ui,sans-serif;letter-spacing:.03em;text-transform:none}
-.docs .remove-file:hover{border-color:var(--red);background:rgba(255,148,139,.18);box-shadow:0 0 12px rgba(255,148,139,.12)}
-#notice{min-height:1.5em;margin:10px 0 0;color:var(--dim)}
+label{font-size:.78rem;color:var(--muted);display:block;margin-bottom:6px}
+.grid{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.task-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:16px 0}
+.docs{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:5px}
+.docs li{display:flex;align-items:center;gap:9px;background:transparent;border:0;border-radius:9px;padding:9px;color:var(--muted);font-size:.82rem;overflow-wrap:anywhere}
+.docs li::before{content:"▤";color:var(--accent);flex:none}
+.docs li span{min-width:0;overflow-wrap:anywhere;flex:1}
+.docs .remove-file{border-color:transparent;background:transparent;color:var(--muted);padding:4px 7px;font-size:.72rem}
+#notice{min-height:1.5em;margin:10px 0 0;color:var(--muted)}
 #notice.error{color:var(--red)}
 #library-notice.error{color:var(--red)}
-.turn{padding:18px 0;border-bottom:1px solid var(--line)}
+.turn{max-width:760px;padding:22px 0;border-bottom:1px solid var(--line)}
 .turn:last-child{border-bottom:0}
-.question{font-weight:650;color:#e1d6ff;margin:0 0 12px}
+.question{font-weight:600;color:var(--ink);margin:0 0 12px}
 .answer{white-space:pre-wrap;margin:0;color:var(--ink)}
 .sources{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
-.sources summary{color:var(--purple);font:500 .78rem "Chakra Petch","Segoe UI",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.sources summary{color:var(--accent);font-size:.78rem;cursor:pointer}
 .sources ul{margin:8px 0 0;padding-left:22px;color:var(--dim);font-size:.88rem}
-#conversation:empty{display:none}
-footer{text-align:center;color:var(--faint);font: .7rem "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.05em;margin-top:22px}
-:focus-visible{outline:2px solid var(--purple);outline-offset:3px}
-@media(max-width:620px){main{padding:22px 14px 44px}.grid,.task-grid{grid-template-columns:1fr}.panel{padding:16px}.row>*{max-width:100%}}
+footer{text-align:center;color:var(--soft);font-size:.72rem;margin:14px 0 0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.sources-panel{padding:20px 14px}
+.sources-panel .row{margin-top:15px;display:grid}
+.sources-panel .file-actions{display:flex;gap:7px}
+.sources-panel .file-actions button{flex:1}
+.chat-panel{position:relative;display:flex;flex-direction:column;align-items:center;min-height:calc(100vh - 64px);padding:0 28px 20px;border-right:1px solid var(--line);background:#131416}
+.chat-head{width:100%;max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:17px 0;border-bottom:1px solid var(--line)}
+.chat-head h2{font-size:.92rem;font-weight:600}
+#conversation{width:100%;max-width:760px;flex:1;overflow:auto;padding:8px 4px 18px;background:transparent}
+#conversation:empty{display:block}
+.welcome{min-height:48vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:var(--muted)}
+.welcome .welcome-icon{font-size:2.4rem;color:var(--accent);margin-bottom:12px}
+.welcome h2{font-size:1.55rem;font-weight:500;color:var(--ink);margin:0 0 6px}
+.welcome p{max-width:420px;margin:0}
+.composer{width:100%;max-width:760px;border:1px solid #484a51;border-radius:22px;background:var(--surface);padding:13px 15px 10px;box-shadow:0 8px 26px #0003}
+.composer textarea{display:block;border:0;background:transparent;min-height:56px;max-height:180px;resize:vertical;padding:4px 3px;outline:none}
+.composer textarea:focus-visible{outline:none}
+.composer-tools{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:8px;border-top:1px solid var(--line)}
+.composer-tools select{padding:6px 10px;border-radius:999px;font-size:.78rem}
+.send-button{background:var(--accent);color:var(--accent-ink);border:0;font-weight:650}
+.send-button:hover{background:#c2d9ff}
+.studio-panel{padding:20px 16px;border-right:0}
+.studio-panel .panel-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.studio-card{margin-top:12px;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.studio-card h3{font-size:.84rem;margin:0 0 5px}
+.studio-card p{font-size:.77rem;color:var(--muted);margin:0}
+.studio-panel select,.studio-panel input{width:100%}
+.model-check{width:100%;margin-top:12px}
+@media(max-width:1000px){.workspace{grid-template-columns:230px minmax(300px,1fr)}.studio-panel{display:none}}
+@media(max-width:680px){main{grid-template-rows:58px 1fr}header{height:58px;padding:0 14px}.workspace{grid-template-columns:1fr;grid-template-rows:auto 1fr}.sources-panel{border-right:0;border-bottom:1px solid var(--line);padding:12px 14px}.sources-panel .row{display:flex;margin-top:9px}.sources-panel .row input{min-width:0;flex:1}.sources-panel .file-actions{width:100%}.sources-panel h2{font-size:.82rem}.docs{grid-template-columns:1fr 1fr;max-height:108px;overflow:auto}.docs li{padding:5px}.chat-panel{min-height:calc(100vh - 58px);padding:0 14px 14px;border:0}.welcome{min-height:32vh}.grid{align-items:end}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <main>
 <header>
-  <div class="mark" aria-hidden="true">
-    <span class="mark-orbit"><span class="mark-satellite"></span></span>
-    <span class="mark-core"></span>
-  </div>
-  <div><h1>Local Study Assistant</h1><p>Ask questions grounded in your course notes.</p></div>
+  <div class="mark" aria-hidden="true"></div>
+  <div><h1>Study notebook</h1><p>Local Study Assistant</p></div>
 </header>
-
-<section class="panel" aria-labelledby="library-title">
-  <h2 id="library-title">Your study files</h2>
-  <div class="row">
-    <input id="file-input" type="file" accept=".pdf,.txt,.md" multiple aria-label="Choose study files">
-    <button id="upload-button" class="secondary" type="button">Add files</button>
-    <button id="index-button" type="button">Index files</button>
-    <button id="model-button" class="secondary" type="button">Check model</button>
-  </div>
-  <ul id="documents" class="docs" aria-label="Study files"></ul>
-  <p id="library-notice" class="status" aria-live="polite"></p>
-</section>
-
-<section class="panel" aria-labelledby="prompt-title">
-  <h2 id="prompt-title">Study with your notes</h2>
-  <form id="ask-form">
-    <div class="task-grid">
-      <div><label for="task">What would you like to do?</label>
-        <select id="task"><option value="ask">Ask a question</option><option value="quiz">Make a quiz</option><option value="grade">Get feedback on my answer</option></select>
-      </div>
-      <div id="topic-wrap" hidden><label for="topic">Topic (optional)</label><input id="topic" type="text" placeholder="For example, gradient descent"></div>
+<div class="workspace">
+  <aside class="panel sources-panel" aria-labelledby="library-title">
+    <h2 id="library-title">Sources</h2>
+    <p class="muted" style="font-size:.78rem;margin:5px 0 0">Add your course notes to start a notebook.</p>
+    <div class="row">
+      <input id="file-input" type="file" accept=".pdf,.txt,.md" multiple aria-label="Choose study files">
+      <div class="file-actions"><button id="upload-button" class="secondary" type="button">Add files</button><button id="index-button" type="button">Index</button></div>
     </div>
-    <label id="text-label" for="prompt">Your question</label>
-    <textarea id="prompt" maxlength="4000" required placeholder="For example, what is gradient descent?"></textarea>
-    <div class="grid" style="margin-top:12px">
-      <div><label for="limit">Number of note excerpts to use</label>
-        <select id="limit"><option value="3">3 excerpts</option><option value="5" selected>5 excerpts</option><option value="8">8 excerpts</option></select>
-      </div>
-      <button id="send-button" type="submit">Get answer</button>
-    </div>
-  </form>
-  <p id="notice" aria-live="polite"></p>
-</section>
+    <ul id="documents" class="docs" aria-label="Study files"></ul>
+    <p id="library-notice" class="status" aria-live="polite"></p>
+  </aside>
 
-<section id="conversation" class="panel" aria-live="polite" aria-label="Study responses"></section>
-<footer>Your files and questions stay on this computer. Unsloth Studio must be running to generate responses.</footer>
+  <section class="chat-panel" aria-labelledby="chat-title">
+    <div class="chat-head"><h2 id="chat-title">Notebook chat</h2><span class="muted" style="font-size:.76rem">Grounded in your sources</span></div>
+    <section id="conversation" aria-live="polite" aria-label="Study responses">
+      <div class="welcome"><div class="welcome-icon" aria-hidden="true">✦</div><h2>What would you like to learn?</h2><p>Ask a question about your sources, make a quiz, or get feedback on an answer.</p></div>
+    </section>
+    <form id="ask-form" class="composer">
+      <div class="task-grid">
+        <div><label for="task">Study mode</label>
+          <select id="task"><option value="ask">Ask a question</option><option value="quiz">Make a quiz</option><option value="grade">Get feedback on my answer</option></select>
+        </div>
+        <div id="topic-wrap" hidden><label for="topic">Topic (optional)</label><input id="topic" type="text" placeholder="For example, gradient descent"></div>
+      </div>
+      <label id="text-label" for="prompt">Your question</label>
+      <textarea id="prompt" maxlength="4000" required placeholder="Ask a question about your course materials…"></textarea>
+      <p id="notice" aria-live="polite"></p>
+      <div class="composer-tools"><label for="limit" style="margin:0">Sources to use</label>
+        <select id="limit" aria-label="Number of note excerpts to use"><option value="3">3 excerpts</option><option value="5" selected>5 excerpts</option><option value="8">8 excerpts</option></select>
+        <button id="send-button" class="send-button" type="submit">Ask</button>
+      </div>
+    </form>
+    <footer>Your files and questions stay on this computer. Unsloth Studio must be running to generate responses.</footer>
+  </section>
+
+  <aside class="panel studio-panel" aria-labelledby="studio-title">
+    <div class="panel-title-row"><h2 id="studio-title">Studio</h2><span aria-hidden="true" style="color:var(--accent)">✦</span></div>
+    <p class="muted" style="font-size:.8rem;margin:0">Turn your sources into active study practice.</p>
+    <div class="studio-card"><h3>Make a quiz</h3><p>Generate practice questions from the selected topic and your indexed notes.</p></div>
+    <div class="studio-card"><h3>Check an answer</h3><p>Write what you know and get source based feedback.</p></div>
+    <label for="studio-task" style="margin-top:18px">Choose an activity</label>
+    <select id="studio-task"><option value="ask">Ask about sources</option><option value="quiz">Make a quiz</option><option value="grade">Get answer feedback</option></select>
+    <button id="model-button" class="secondary model-check" type="button">Check local model</button>
+    <p class="status" style="margin-top:8px">The model runs locally through Unsloth Studio.</p>
+  </aside>
+</div>
 </main>
 <script>
 const byId = (id) => document.getElementById(id);
 const task = byId("task");
 const notice = byId("notice");
 const libraryNotice = byId("library-notice");
+const studioTask = byId("studio-task");
 
 function setNotice(element, message, isError) {
   element.textContent = message || "";
@@ -209,12 +217,19 @@ async function refreshStatus() {
 }
 
 task.addEventListener("change", () => {
+  studioTask.value = task.value;
   const grade = task.value === "grade";
   byId("topic-wrap").hidden = !grade;
   byId("text-label").textContent = grade ? "Your answer" : task.value === "quiz" ? "Quiz topic" : "Your question";
   byId("prompt").placeholder = grade ? "Type the answer you want feedback on…" :
     task.value === "quiz" ? "For example, activation functions" : "For example, what is gradient descent?";
   byId("send-button").textContent = task.value === "quiz" ? "Make quiz" : grade ? "Get feedback" : "Get answer";
+});
+
+studioTask.addEventListener("change", () => {
+  task.value = studioTask.value;
+  task.dispatchEvent(new Event("change"));
+  byId("prompt").focus();
 });
 
 byId("upload-button").addEventListener("click", async () => {
@@ -270,6 +285,8 @@ byId("model-button").addEventListener("click", async () => {
 });
 
 function addTurn(question, data) {
+  const welcome = document.querySelector(".welcome");
+  if (welcome) welcome.remove();
   const turn = document.createElement("article");
   turn.className = "turn";
   const questionNode = document.createElement("p");
