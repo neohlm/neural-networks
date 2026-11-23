@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Local Study Assistant — Presentation</title>
+<style>
+:root{color-scheme:dark;--bg:#07040d;--panel:#140d20;--line:rgba(198,154,255,.25);--ink:#f1eaff;--muted:#b4a7cb;--soft:#77678f;--purple:#c69aff;--pink:#ed8bff;--violet:#8c68d9;--green:#9ee8c1}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font:16px/1.45 "Segoe UI",system-ui,sans-serif}
+body{background-image:radial-gradient(ellipse 65% 55% at 90% 0%,rgba(140,104,217,.18),transparent 65%),radial-gradient(ellipse 55% 45% at 0% 100%,rgba(198,154,255,.09),transparent 70%)}
+.slide{display:none;position:absolute;inset:0;padding:5.5vh 6.3vw 6vh;overflow:hidden}.slide.active{display:flex;flex-direction:column}.slide::after{content:"";position:absolute;left:6.3vw;right:6.3vw;bottom:4.1vh;height:1px;background:linear-gradient(90deg,var(--purple),transparent 65%);opacity:.55}
+.topline{display:flex;align-items:center;justify-content:space-between;font:600 .67rem/1.2 "Segoe UI",system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--purple)}
+.brand{display:flex;align-items:center;gap:10px}.orb{position:relative;display:inline-grid;place-items:center;width:23px;height:23px;border:1px solid rgba(198,154,255,.55);border-radius:50%;box-shadow:0 0 13px rgba(198,154,255,.18)}.orb::before{content:"";position:absolute;inset:3px;border:1px solid transparent;border-top-color:var(--purple);border-bottom-color:var(--pink);border-radius:50%;animation:orbit 4s linear infinite}.orb::after{content:"";width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 30% 30%,white,var(--purple) 55%,#7045c8);box-shadow:0 0 9px var(--purple);animation:pulse 2s ease-in-out infinite}
+@keyframes orbit{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(.72);box-shadow:0 0 15px var(--pink)}}
+.page{color:var(--soft);letter-spacing:.1em}.content{position:relative;z-index:1;flex:1;min-height:0;padding-top:4.6vh}.kicker{font-size:.73rem;font-weight:650;letter-spacing:.22em;text-transform:uppercase;color:var(--pink);margin-bottom:12px}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(2.8rem,6vw,5.4rem);line-height:.99;letter-spacing:-.045em;margin:0;max-width:850px;font-weight:550}h1 .grad{background:linear-gradient(100deg,#fff 0%,#ddc3ff 45%,var(--pink) 100%);background-clip:text;color:transparent}
+h2{font-size:clamp(2.15rem,4vw,3.6rem);line-height:1.05;letter-spacing:-.035em;font-weight:520;margin:12px 0 14px}h3{font-size:1.05rem;font-weight:650;margin:0 0 8px}.lede{font-size:clamp(1.03rem,1.55vw,1.28rem);color:var(--muted);max-width:720px;margin:20px 0 0}.small{font-size:.8rem;color:var(--soft)}.accent{color:var(--purple)}
+.cover{justify-content:center}.cover .content{padding-top:5vh}.cover h1{margin-top:18px}.cover .lede{max-width:670px}.cover-flow{display:flex;align-items:center;gap:12px;margin-top:6vh;max-width:800px;color:var(--muted);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}.flow-node{display:flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid var(--line);background:rgba(20,13,32,.65)}.flow-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);box-shadow:0 0 10px var(--purple)}.flow-arrow{color:var(--pink);font-size:1.2rem}
+.columns{display:grid;grid-template-columns:1.12fr .88fr;gap:4vw;align-items:center;height:100%}.image-frame{position:relative;padding:7px;border:1px solid rgba(198,154,255,.36);background:rgba(11,7,18,.8);box-shadow:0 15px 50px rgba(0,0,0,.3)}.image-frame::before,.image-frame::after{content:"";position:absolute;width:15px;height:15px;border-color:var(--purple);border-style:solid;z-index:2}.image-frame::before{top:-1px;left:-1px;border-width:2px 0 0 2px}.image-frame::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}.image-frame img{display:block;width:100%;height:auto}.columns .image-frame{height:min(58vh,460px);display:flex;align-items:center;justify-content:center}.columns .image-frame img{width:auto;height:100%;max-width:100%;object-fit:contain}.callouts{display:grid;gap:16px}.callout{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}.num{display:grid;place-items:center;width:30px;height:30px;border:1px solid var(--purple);border-radius:50%;font-size:.78rem;color:var(--purple);box-shadow:0 0 12px rgba(198,154,255,.15)}.callout p{margin:0;color:var(--muted);font-size:.9rem}.callout strong{display:block;color:var(--ink);font-size:.95rem;margin-bottom:3px}.note{margin-top:15px;border-left:2px solid var(--pink);padding:9px 12px;background:rgba(237,139,255,.06);font-size:.76rem;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4vh}.step{min-height:175px;padding:17px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(38,24,58,.7),rgba(12,8,19,.7));position:relative}.step .stepno{font-size:.7rem;letter-spacing:.18em;color:var(--pink);margin-bottom:22px}.step p{font-size:.82rem;color:var(--muted);margin:0}.step:not(:last-child)::after{content:"›";position:absolute;right:-10px;top:45%;z-index:2;color:var(--purple);font-size:1.2rem}
+.pipeline{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:stretch;margin:4vh 0 3vh}.pipe{position:relative;min-height:155px;padding:14px 12px;border:1px solid var(--line);background:rgba(20,13,32,.72)}.pipe:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:48%;z-index:2;color:var(--pink);font-size:1.1rem}.pipe .index{font-size:.68rem;letter-spacing:.17em;color:var(--pink);margin-bottom:16px}.pipe h3{font-family:ui-monospace,Consolas,monospace;font-size:.84rem;color:var(--purple)}.pipe p{font-size:.76rem;color:var(--muted);margin:0}.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.info{border-top:1px solid var(--line);padding:14px 3px 0}.info h3{font-size:.9rem;color:var(--pink)}.info p{font-size:.83rem;color:var(--muted);margin:0}
+.activities{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.activity{padding:15px;border:1px solid var(--line);background:rgba(20,13,32,.75)}.activity .tag{font-size:.68rem;letter-spacing:.14em;color:var(--purple);text-transform:uppercase;margin-bottom:9px}.activity p{font-size:.8rem;color:var(--muted);margin:0}
+.stack{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.stack-card{padding:16px 17px;border:1px solid var(--line);background:rgba(20,13,32,.72);min-height:135px}.stack-card .layer{font-size:.66rem;text-transform:uppercase;letter-spacing:.17em;color:var(--pink);margin-bottom:12px}.stack-card h3{color:var(--purple);font:600 .98rem ui-monospace,Consolas,monospace}.stack-card p{font-size:.78rem;color:var(--muted);margin:0}.privacy{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:3vh}.privacy-box{padding:16px 18px;border:1px solid var(--line);background:rgba(20,13,32,.72)}.privacy-box h3{color:var(--pink)}.privacy-box ul{padding-left:18px;margin:0;color:var(--muted);font-size:.84rem}.privacy-box li{margin:7px 0}.label{display:inline-block;padding:4px 8px;border:1px solid rgba(158,232,193,.4);color:var(--green);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase}
+.controls{position:fixed;z-index:20;right:22px;bottom:14px;display:flex;gap:8px;align-items:center}.controls button{border:1px solid var(--line);background:rgba(20,13,32,.9);color:var(--ink);padding:7px 11px;cursor:pointer}.controls button:hover{border-color:var(--purple);color:var(--purple)}.controls .counter{min-width:44px;text-align:center;font-size:.75rem;color:var(--muted)}.hint{position:fixed;left:6.3vw;bottom:17px;color:var(--soft);font-size:.7rem;z-index:20}
+@media(max-width:900px){.slide{padding:4vh 4vw 7vh}.slide::after{left:4vw;right:4vw}.content{padding-top:2vh}.columns{grid-template-columns:1fr;gap:18px;align-content:start}.image-frame{max-height:43vh;overflow:hidden}.image-frame img{width:100%;max-height:43vh;object-fit:contain;object-position:top}.steps{grid-template-columns:repeat(2,1fr);margin-top:2vh}.step{min-height:120px}.pipeline{grid-template-columns:repeat(3,1fr);margin:2vh 0}.pipe{min-height:120px}.pipe:nth-child(3)::after{display:none}.stack{grid-template-columns:repeat(2,1fr)}.callouts{grid-template-columns:1fr 1fr}.hint{left:4vw}.slide{overflow:auto}}
+@media print{html,body{height:auto;overflow:visible;background:#07040d!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.slide,.slide.active{display:flex!important;position:relative;width:100vw;height:56.25vw;min-height:0;page-break-after:always;break-after:page;overflow:hidden}.controls,.hint{display:none!important}.slide::after{position:absolute}.image-frame img{max-height:100%;object-fit:contain}}
+</style>
+</head>
+<body>
+<section class="slide active cover" aria-label="Title slide">
+  <div class="topline"><div class="brand"><span class="orb"></span> Local Study Assistant</div><span>ITRI626 · Local AI</span></div>
+  <div class="content">
+    <div class="kicker">A source-grounded study companion</div>
+    <h1>Course notes in.<br><span class="grad">Clearer study out.</span></h1>
+    <p class="lede">A local assistant that searches your own learning materials, asks a locally hosted language model to help, and points back to the sources it used.</p>
+    <div class="cover-flow"><span class="flow-node"><i class="flow-dot"></i> Your notes</span><span class="flow-arrow">→</span><span class="flow-node"><i class="flow-dot"></i> Local search</span><span class="flow-arrow">→</span><span class="flow-node"><i class="flow-dot"></i> Local model</span><span class="flow-arrow">→</span><span class="flow-node"><i class="flow-dot"></i> Study response</span></div>
+  </div>
+  <div class="small">A walkthrough of the app, its architecture, and how to use it.</div>
+</section>
+
+<section class="slide" aria-label="Study workspace">
+  <div class="topline"><div class="brand"><span class="orb"></span> Product tour</div><span class="page">02 / 07</span></div>
+  <div class="content">
+    <div class="kicker">One workspace · Three jobs</div><h2>Three panels. One study loop.</h2>
+  <div class="columns">
+      <figure class="image-frame"><img src="presentation-assets/workspace.png" alt="Screenshot of the Local Study Assistant showing its Sources, Notebook chat, and Studio panels"></figure>
+      <div class="callouts">
+        <div class="callout"><span class="num">1</span><p><strong>Sources</strong>Add PDF, TXT, or Markdown course material, then index it for search.</p></div>
+        <div class="callout"><span class="num">2</span><p><strong>Notebook chat</strong>Choose a study mode, write a prompt, and set how many excerpts to retrieve.</p></div>
+        <div class="callout"><span class="num">3</span><p><strong>Studio</strong>Switch among question answering, quiz generation, and feedback on your answer.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="How answers are generated">
+  <div class="topline"><div class="brand"><span class="orb"></span> How it works</div><span class="page">03 / 07</span></div>
+  <div class="content">
+    <div class="kicker">Retrieval-augmented generation</div><h2>Search first. Ask the model second.</h2>
+    <p class="lede" style="margin-top:0;font-size:1rem">The model does not learn from uploaded files. The app finds relevant text and includes it in each request as temporary context.</p>
+    <div class="pipeline">
+      <div class="pipe"><div class="index">01 · INGEST</div><h3>PDF / TXT / MD</h3><p>Read text; PDF pages retain page numbers.</p></div>
+      <div class="pipe"><div class="index">02 · CHUNK</div><h3>~1,000 chars</h3><p>Normalize text and overlap chunks by 150 characters.</p></div>
+      <div class="pipe"><div class="index">03 · INDEX</div><h3>SQLite FTS5</h3><p>Porter stemming + Unicode tokenization.</p></div>
+      <div class="pipe"><div class="index">04 · RETRIEVE</div><h3>Top excerpts</h3><p>Keyword match; rank results and take the requested limit.</p></div>
+      <div class="pipe"><div class="index">05 · PROMPT</div><h3>Instructions + notes</h3><p>Ask for an answer grounded in the retrieved excerpts.</p></div>
+      <div class="pipe"><div class="index">06 · RESPOND</div><h3>Local model</h3><p>Return the response and the source list to the UI.</p></div>
+    </div>
+    <div class="bottom-grid">
+      <div class="info"><h3>Search details</h3><p>The app tokenizes the query, searches up to 12 terms with OR matching, ranks results, and defaults to five excerpts.</p></div>
+      <div class="info"><h3>Grounding details</h3><p>Each excerpt is labeled for citation. The system prompt tells the model to use the supplied notes and say when they do not support an answer.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Using the app">
+  <div class="topline"><div class="brand"><span class="orb"></span> Getting started</div><span class="page">04 / 07</span></div>
+  <div class="content">
+    <div class="kicker">A simple study loop</div><h2>From a file to a focused question.</h2>
+    <div class="steps">
+      <div class="step"><div class="stepno">STEP 01</div><h3>Start the local model</h3><p>Open Unsloth Studio, load a compatible GGUF instruct model, and make sure its local API is available.</p></div>
+      <div class="step"><div class="stepno">STEP 02</div><h3>Add course material</h3><p>Choose PDF, TXT, or Markdown files in the Sources pane. The app stores uploads in its local documents folder.</p></div>
+      <div class="step"><div class="stepno">STEP 03</div><h3>Index your files</h3><p>Select <b>Index</b>. The app extracts text, splits it into overlapping chunks, and writes the search index to SQLite.</p></div>
+      <div class="step"><div class="stepno">STEP 04</div><h3>Ask and inspect</h3><p>Choose a mode, write a question or answer, and review the source list under the response.</p></div>
+    </div>
+    <div class="note" style="margin-top:20px">For PDFs, searchable/selectable text is required. Scanned pages need OCR, which is not included.</div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Study modes and citations">
+  <div class="topline"><div class="brand"><span class="orb"></span> Study modes</div><span class="page">05 / 07</span></div>
+  <div class="content">
+    <div class="kicker">Three ways to use the same sources</div><h2>Ask. Practise. Explain what you know.</h2>
+    <div class="columns" style="grid-template-columns:1.12fr .88fr">
+      <figure class="image-frame"><img src="presentation-assets/answer-card.png" alt="Illustrative answer with a Sources used list expanded to show a file and page citation"></figure>
+      <div>
+        <div class="activities">
+          <div class="activity"><div class="tag">Ask</div><p>Get a course-focused explanation. The model is asked to cite the excerpts it uses.</p></div>
+          <div class="activity"><div class="tag">Quiz</div><p>Generate three short practice questions from the selected topic and notes; answers are withheld initially.</p></div>
+          <div class="activity"><div class="tag">Feedback</div><p>See what is correct, what to improve, and a short model answer grounded in the notes.</p></div>
+        </div>
+        <p class="small" style="margin-top:16px">Expand “Sources used” below a response to see its file and, for PDFs, page number. The screenshot uses a sample response and sample citation to demonstrate the interface.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Technology stack">
+  <div class="topline"><div class="brand"><span class="orb"></span> Technology</div><span class="page">06 / 07</span></div>
+  <div class="content">
+    <div class="kicker">Small, local-first stack</div><h2>Every layer has a clear job.</h2>
+    <div class="stack">
+      <div class="stack-card"><div class="layer">Interface</div><h3>HTML · CSS · JavaScript</h3><p>Single-page browser UI served by the Python app. No frontend framework or remote service is required.</p></div>
+      <div class="stack-card"><div class="layer">Web server</div><h3>Python 3.11–3.13</h3><p>Python standard-library HTTP server handles the page and local JSON/file endpoints.</p></div>
+      <div class="stack-card"><div class="layer">Document parsing</div><h3>pypdf</h3><p>Extracts selectable text from PDFs and retains page numbers for source references.</p></div>
+      <div class="stack-card"><div class="layer">Search index</div><h3>SQLite FTS5</h3><p>Embedded full-text index; Porter stemming and Unicode-aware tokenization support lightweight keyword retrieval.</p></div>
+      <div class="stack-card"><div class="layer">Inference server</div><h3>Unsloth Studio</h3><p>Serves a loaded local GGUF instruct model through an OpenAI-compatible API.</p></div>
+      <div class="stack-card"><div class="layer">Model requests</div><h3>/v1/chat/completions</h3><p>The app discovers a loaded model ID or accepts UNSLOTH_MODEL. Default generation uses temperature 0.3 and up to 500 tokens.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Privacy and limitations">
+  <div class="topline"><div class="brand"><span class="orb"></span> Design boundaries</div><span class="page">07 / 07</span></div>
+  <div class="content">
+    <div class="kicker">Local by design · Evidence matters</div><h2>Know what stays local—and what to verify.</h2>
+    <div class="privacy">
+      <div class="privacy-box"><h3><span class="label">Local</span> Your study loop</h3><ul><li>The web server binds to 127.0.0.1 on this computer.</li><li>Uploaded files, extracted text, and the SQLite index stay in local folders.</li><li>Model requests go to the configured local Unsloth endpoint.</li><li>The API key can come from the Linux desktop keyring or UNSLOTH_API_KEY.</li></ul></div>
+      <div class="privacy-box"><h3>Current limitations</h3><ul><li>Retrieval is keyword-based, not semantic; use distinctive course terms.</li><li>Scanned PDFs need OCR. This app does not provide OCR.</li><li>Answers from small models can be incomplete or wrong; check citations against the original notes.</li><li>Chat history is not retained after a page refresh.</li><li>The app retrieves context; it does not fine-tune or change model weights.</li></ul></div>
+    </div>
+    <p class="lede" style="font-size:1rem;margin-top:3vh">Best practice: start with a few clean course files, verify the indexed text, and evaluate answers with a fixed set of questions.</p>
+  </div>
+</section>
+
+<div class="hint">Use ← → or Space to navigate · F for fullscreen · Print to save as PDF</div>
+<nav class="controls" aria-label="Presentation controls"><button id="prev" aria-label="Previous slide">←</button><span class="counter" id="counter">01 / 07</span><button id="next" aria-label="Next slide">→</button><button id="full" aria-label="Toggle fullscreen">⛶</button></nav>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let current=0;const counter=document.getElementById('counter');function show(i){current=(i+slides.length)%slides.length;slides.forEach((s,n)=>s.classList.toggle('active',n===current));counter.textContent=String(current+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0')}
+document.getElementById('prev').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);document.getElementById('full').onclick=()=>document.documentElement.requestFullscreen?.();document.addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(current+1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(current-1)}if(e.key.toLowerCase()==='f')document.documentElement.requestFullscreen?.()});
+</script>
+</body>
+</html>
